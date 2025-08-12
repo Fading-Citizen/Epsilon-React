@@ -155,10 +155,16 @@ const StudentDashboard = () => {
         <header className="header">
           <div className="logo-section">
             <img 
-              src="/assets/images/LogotipoBlanco.png" 
+              src={isDarkMode ? "/assets/images/LogotipoBlanco.png" : "/assets/images/LogotipoGrisOscuro.png"}
               alt="Epsilon Academy" 
               className="logo-image"
+              style={{ transition: 'opacity 0.3s ease' }}
               onError={(e) => {
+                // Si LogotipoGrisOscuro no existe, intentar con otra opción
+                if (!isDarkMode && e.target.src.includes('LogotipoGrisOscuro')) {
+                  e.target.src = "/assets/images/IsotipoNegro.png";
+                  return;
+                }
                 e.target.style.display = 'none';
                 const fallback = document.createElement('div');
                 fallback.innerHTML = '<span class="logo">epsilon</span><span class="academy">ACADEMY</span>';
@@ -216,951 +222,775 @@ const StudentDashboard = () => {
 const StyledWrapper = styled.div`
   min-height: 100vh;
   background: ${props => props.$isDark 
-    ? 'linear-gradient(135deg, #1a1a2e, #16213e)' 
-    : 'linear-gradient(135deg, #f5f7fa, #c3cfe2)'
+    ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a1a2e 100%)' 
+    : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #c3cfe2 100%)'
   };
+  position: relative;
+  overflow-x: hidden;
+
+  /* CSS Variables for consistent theming */
+  --color-e-kids: #f0e23d;
+  --color-bachillerato: #f7750b;
+  --color-pre-u: #6969bc;
+  --color-profes: #087799;
+  --color-secondary: #18e2a2;
 
   .container {
     max-width: 100%;
     padding: 0;
+    min-height: 100vh;
   }
 
-  /* Header Styling */
+  /* Enhanced Header Styling */
   .header {
     background: ${props => props.$isDark 
-      ? 'rgba(30, 30, 60, 0.95)' 
-      : 'rgba(255, 255, 255, 0.95)'
+      ? 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)' 
+      : 'linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%)'
     };
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid ${props => props.$isDark ? '#333660' : '#e1e5e9'};
-    padding: 1rem 2rem;
+    border-bottom: 1px solid ${props => props.$isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.8)'};
+    padding: 1.2rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 1000;
+    box-shadow: ${props => props.$isDark 
+      ? '0 4px 20px rgba(0, 0, 0, 0.3)' 
+      : '0 4px 20px rgba(0, 0, 0, 0.1)'
+    };
+    transition: all 0.3s ease;
   }
 
   .logo-section {
     display: flex;
     align-items: center;
     gap: 1rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   .logo-image {
-    height: 40px;
+    height: 42px;
     width: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: filter 0.3s ease;
   }
 
   .logo-fallback {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
     .logo {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: var(--color-e-kids);
       text-transform: lowercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     }
     .academy {
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--color-profes);
-      margin-left: 0.25rem;
+      margin-left: 0.3rem;
+      letter-spacing: 1px;
     }
   }
 
   .perfil-badge {
-    background: linear-gradient(135deg, var(--color-e-kids), var(--color-bachillerato));
+    background: linear-gradient(135deg, var(--color-e-kids) 0%, var(--color-bachillerato) 100%);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(247, 117, 11, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(247, 117, 11, 0.4);
+    }
   }
 
   .header-center {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
   }
 
   .nav-button {
-    background: ${props => props.$isDark ? '#4a5568' : '#e2e8f0'};
-    color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, #334155 0%, #475569 100%)' 
+      : 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%)'
+    };
+    color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+    border: 1px solid ${props => props.$isDark ? '#475569' : '#cbd5e0'};
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &:hover {
-      background: ${props => props.$isDark ? '#5a6578' : '#cbd5e0'};
+      background: ${props => props.$isDark 
+        ? 'linear-gradient(135deg, #475569 0%, #64748b 100%)' 
+        : 'linear-gradient(135deg, #cbd5e0 0%, #94a3b8 100%)'
+      };
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
   .page-title {
-    color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-    font-size: 1.5rem;
-    font-weight: 600;
+    color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+    font-size: 1.6rem;
+    font-weight: 700;
     margin: 0;
+    text-shadow: ${props => props.$isDark 
+      ? '2px 2px 4px rgba(0, 0, 0, 0.3)' 
+      : '1px 1px 2px rgba(0, 0, 0, 0.1)'
+    };
   }
 
   .user-profile {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.2rem;
   }
 
   .notification-icon {
-    padding: 0.5rem;
-    border-radius: 8px;
-    background: ${props => props.$isDark ? '#4a5568' : '#f7fafc'};
+    padding: 0.6rem;
+    border-radius: 12px;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, #334155 0%, #475569 100%)' 
+      : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
+    };
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
     &:hover {
-      background: ${props => props.$isDark ? '#5a6578' : '#edf2f7'};
+      background: ${props => props.$isDark 
+        ? 'linear-gradient(135deg, #475569 0%, #64748b 100%)' 
+        : 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%)'
+      };
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
   }
 
   .user-info {
     text-align: right;
+    transition: all 0.3s ease;
+    
     .user-name {
-      font-weight: 600;
-      color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-      font-size: 0.875rem;
+      font-weight: 700;
+      color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
     }
     .user-email {
       font-size: 0.75rem;
-      color: ${props => props.$isDark ? '#a0aec0' : '#718096'};
+      color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+      margin-bottom: 0.3rem;
     }
     .edit-profile {
       font-size: 0.75rem;
       color: var(--color-profes);
       cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      
       &:hover {
+        color: var(--color-secondary);
         text-decoration: underline;
+        transform: scale(1.05);
       }
     }
   }
 
   .profile-icon {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-pre-u), var(--color-profes));
+    background: linear-gradient(135deg, var(--color-pre-u) 0%, var(--color-profes) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(8, 119, 153, 0.3);
+
+    &:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 20px rgba(8, 119, 153, 0.4);
+    }
   }
 
-  /* Main Content */
+  /* Enhanced Main Content */
   .main-content {
-    padding: 2rem;
-    max-width: 1200px;
+    padding: 2.5rem 2rem;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
   .main-sections {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 3rem;
   }
 
   .section-card {
     background: ${props => props.$isDark 
-      ? 'rgba(30, 30, 60, 0.8)' 
-      : 'rgba(255, 255, 255, 0.9)'
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%)' 
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
     };
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid ${props => props.$isDark ? '#333660' : '#e1e5e9'};
-    transition: all 0.3s ease;
+    backdrop-filter: blur(25px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
+    };
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: ${props => props.$isDark 
+      ? '0 10px 30px rgba(0, 0, 0, 0.3)' 
+      : '0 10px 30px rgba(0, 0, 0, 0.1)'
+    };
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-e-kids), var(--color-bachillerato), var(--color-pre-u), var(--color-profes));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     &:hover {
-      transform: translateY(-4px);
+      transform: translateY(-8px);
       box-shadow: ${props => props.$isDark 
-        ? '0 20px 40px rgba(0,0,0,0.3)' 
-        : '0 20px 40px rgba(0,0,0,0.1)'
+        ? '0 20px 50px rgba(0, 0, 0, 0.4)' 
+        : '0 20px 50px rgba(0, 0, 0, 0.15)'
       };
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &.oferta-academica {
+      border-left: 4px solid var(--color-profes);
+      
+      &:hover {
+        box-shadow: 0 20px 50px rgba(8, 119, 153, 0.2);
+      }
+    }
+
+    &.mis-cursos {
+      border-left: 4px solid var(--color-secondary);
+      
+      &:hover {
+        box-shadow: 0 20px 50px rgba(24, 226, 162, 0.2);
+      }
+    }
+
+    &.simulacros {
+      border-left: 4px solid var(--color-bachillerato);
+      
+      &:hover {
+        box-shadow: 0 20px 50px rgba(247, 117, 11, 0.2);
+      }
     }
   }
 
   .card-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    
     h2 {
-      color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
+      color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      text-shadow: ${props => props.$isDark 
+        ? '1px 1px 2px rgba(0, 0, 0, 0.3)' 
+        : '1px 1px 2px rgba(0, 0, 0, 0.1)'
+      };
     }
+    
     p {
-      color: ${props => props.$isDark ? '#a0aec0' : '#718096'};
-      font-size: 0.875rem;
+      color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
   }
 
   .course-list {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .course-item {
-    padding: 0.75rem;
-    border-radius: 8px;
-    margin-bottom: 0.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    &:hover {
+      transform: translateX(8px);
+    }
 
     &.matematicas {
-      background: linear-gradient(135deg, rgba(240, 226, 61, 0.1), rgba(247, 117, 11, 0.1));
+      background: linear-gradient(135deg, 
+        rgba(240, 226, 61, 0.15) 0%, 
+        rgba(247, 117, 11, 0.15) 100%
+      );
       border-left: 4px solid var(--color-e-kids);
+      box-shadow: 0 4px 15px rgba(240, 226, 61, 0.2);
     }
+    
     &.fisica {
-      background: linear-gradient(135deg, rgba(105, 105, 188, 0.1), rgba(8, 119, 153, 0.1));
+      background: linear-gradient(135deg, 
+        rgba(105, 105, 188, 0.15) 0%, 
+        rgba(8, 119, 153, 0.15) 100%
+      );
       border-left: 4px solid var(--color-pre-u);
+      box-shadow: 0 4px 15px rgba(105, 105, 188, 0.2);
     }
+    
     &.quimica {
-      background: linear-gradient(135deg, rgba(8, 119, 153, 0.1), rgba(24, 226, 162, 0.1));
+      background: linear-gradient(135deg, 
+        rgba(8, 119, 153, 0.15) 0%, 
+        rgba(24, 226, 162, 0.15) 100%
+      );
       border-left: 4px solid var(--color-profes);
+      box-shadow: 0 4px 15px rgba(8, 119, 153, 0.2);
     }
   }
 
   .course-label {
-    font-weight: 600;
-    color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-    font-size: 0.875rem;
+    font-weight: 700;
+    color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+    font-size: 0.95rem;
   }
 
   .course-desc {
-    color: ${props => props.$isDark ? '#a0aec0' : '#718096'};
-    font-size: 0.75rem;
+    color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
 
   .stats-section {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.5) 0%, rgba(71, 85, 105, 0.3) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.6) 100%)'
+    };
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
 
   .stat {
     text-align: center;
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--color-profes);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
     }
+    
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--color-profes), var(--color-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
     .stat-label {
-      font-size: 0.75rem;
-      color: ${props => props.$isDark ? '#a0aec0' : '#718096'};
+      font-size: 0.8rem;
+      color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+      font-weight: 600;
+      margin-top: 0.3rem;
     }
   }
 
   .progress-courses {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .course-progress {
-    margin-bottom: 1rem;
-    .course-name {
-      font-size: 0.875rem;
-      color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-      margin-bottom: 0.5rem;
+    margin-bottom: 1.2rem;
+    padding: 1rem;
+    background: ${props => props.$isDark 
+      ? 'rgba(51, 65, 85, 0.3)' 
+      : 'rgba(248, 250, 252, 0.8)'
+    };
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
+    
+    .course-name {
+      font-size: 0.9rem;
+      color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    
     .progress-bar {
-      background: ${props => props.$isDark ? '#4a5568' : '#e2e8f0'};
-      height: 8px;
-      border-radius: 4px;
+      background: ${props => props.$isDark ? '#334155' : '#e2e8f0'};
+      height: 10px;
+      border-radius: 6px;
       overflow: hidden;
       position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+    
     .progress-fill {
-      background: linear-gradient(90deg, var(--color-e-kids), var(--color-bachillerato));
+      background: linear-gradient(90deg, 
+        var(--color-e-kids) 0%, 
+        var(--color-bachillerato) 50%, 
+        var(--color-secondary) 100%
+      );
       height: 100%;
-      border-radius: 4px;
-      transition: width 0.3s ease;
+      border-radius: 6px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: shimmer 2s infinite;
+      }
     }
+    
     .progress-text {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--color-profes);
-      margin-top: 0.25rem;
-      font-weight: 600;
+      margin-top: 0.5rem;
+      font-weight: 700;
+      text-align: right;
     }
   }
 
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
   .simulacros-options {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .simulacro-option {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    background: ${props => props.$isDark ? '#4a5568' : '#f7fafc'};
-    border-radius: 8px;
-    color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-    font-size: 0.875rem;
+    gap: 1rem;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.5) 0%, rgba(71, 85, 105, 0.3) 100%)'
+      : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%)'
+    };
+    border-radius: 12px;
+    color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid ${props => props.$isDark ? 'rgba(71, 85, 105, 0.3)' : 'rgba(226, 232, 240, 0.5)'};
+
+    &:hover {
+      background: linear-gradient(135deg, var(--color-bachillerato), #e65b00);
+      color: white;
+      transform: translateX(8px);
+      box-shadow: 0 8px 25px rgba(247, 117, 11, 0.3);
+    }
 
     .icon {
-      font-size: 1.25rem;
+      font-size: 1.4rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover .icon {
+      transform: scale(1.2);
     }
   }
 
   .action-button {
     width: 100%;
-    padding: 0.75rem 1.5rem;
+    padding: 1rem 1.5rem;
     border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: width 0.6s, height 0.6s;
+      transform: translate(-50%, -50%);
+    }
+
+    &:active::before {
+      width: 300px;
+      height: 300px;
+    }
 
     &.primary {
-      background: linear-gradient(135deg, var(--color-profes), var(--color-secondary));
+      background: linear-gradient(135deg, var(--color-profes) 0%, var(--color-secondary) 100%);
       color: white;
+      box-shadow: 0 6px 20px rgba(8, 119, 153, 0.3);
+      
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(8, 119, 153, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(8, 119, 153, 0.4);
+        background: linear-gradient(135deg, #0a8db5 0%, #20f5c7 100%);
       }
     }
 
     &.secondary {
-      background: ${props => props.$isDark ? '#4a5568' : '#e2e8f0'};
-      color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-      &:hover {
-        background: ${props => props.$isDark ? '#5a6578' : '#cbd5e0'};
-      }
-    }
-  }
-
-  .news-section {
-    background: ${props => props.$isDark 
-      ? 'rgba(30, 30, 60, 0.8)' 
-      : 'rgba(255, 255, 255, 0.9)'
-    };
-    backdrop-filter: blur(20px);
-    border-radius: 16px;
-    padding: 1.5rem;
-    border: 1px solid ${props => props.$isDark ? '#333660' : '#e1e5e9'};
-  }
-
-  .news-title {
-    color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-
-  .news-item {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    background: ${props => props.$isDark ? '#4a5568' : '#f7fafc'};
-
-    h3 {
-      color: ${props => props.$isDark ? '#e2e8f0' : '#2d3748'};
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    p {
-      color: ${props => props.$isDark ? '#a0aec0' : '#718096'};
-      font-size: 0.875rem;
-      margin-bottom: 0.5rem;
-    }
-    small {
-      color: ${props => props.$isDark ? '#a0aec0' : '#718096'};
-      font-size: 0.75rem;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .main-sections {
-      grid-template-columns: 1fr;
-    }
-    .header {
-      padding: 1rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .user-info {
-      display: none;
-    }
-  }
-`;
-
-export default StudentDashboard;
-};
-
-const StyledWrapper = styled.div`
-  &#student-dashboard-wrapper {
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    max-width: none !important;
-    min-height: 100vh;
-    
-    .dashboard-container {
-      min-height: 100vh;
-      width: 100vw !important;
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
-        : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
-      } !important;
-      overflow-x: hidden;
-      margin: 0 !important;
-      padding: 0 !important;
-      max-width: none !important;
-      transition: background 0.3s ease;
-    }
-
-    .dashboard-header {
-      background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
-        : 'linear-gradient(135deg, #087799 0%, #076687 100%)'
-      } !important;
-      color: white !important;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: ${props => props.$isDark 
-      ? '0 2px 10px rgba(0,0,0,0.3)'
-      : '0 2px 10px rgba(0,0,0,0.1)'
-    };
-    width: 100vw !important;
-    margin: 0 !important;
-    max-width: none !important;
-    position: relative;
-    transition: all 0.3s ease;
-  }
-
-  .header-center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-
-    .nav-button {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      &.back {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-    }
-
-    .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: white;
-      margin: 0;
-      text-align: center;
-    }
-  }
-
-  .logo-section {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    position: relative;
-    
-    .logo-image {
-      height: 45px;
-      width: auto;
-      filter: brightness(1.1) contrast(1.1);
-    }
-    
-    .logo-fallback {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-  }
-
-  .logo {
-    font-size: 1.8rem;
-    font-weight: 300;
-    letter-spacing: 2px;
-  }
-
-  .academy {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #ecf0f1;
-  }
-
-  .perfil-badge {
-    background: linear-gradient(135deg, #18e2a2 0%, #15c78a 100%);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    margin-left: 1rem;
-  }
-
-  .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .user-info {
-    text-align: right;
-  }
-
-  .user-name {
-    font-weight: bold;
-    font-size: 1rem;
-    color: white;
-  }
-
-  .user-email {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .edit-profile {
-    font-size: 0.8rem;
-    color: #18e2a2;
-    cursor: pointer;
-    margin-top: 0.2rem;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #15c78a;
-    }
-  }
-
-  .profile-icon, .notification-icon {
-    width: 40px;
-    height: 40px;
-    background: ${props => props.$isDark 
-      ? 'rgba(255, 255, 255, 0.1)'
-      : 'rgba(255, 255, 255, 0.2)'
-    };
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: ${props => props.$isDark 
-        ? 'rgba(255, 255, 255, 0.2)'
-        : 'rgba(255, 255, 255, 0.3)'
+        ? 'linear-gradient(135deg, #334155 0%, #475569 100%)' 
+        : 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%)'
       };
+      color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      
+      &:hover {
+        background: ${props => props.$isDark 
+          ? 'linear-gradient(135deg, #475569 0%, #64748b 100%)' 
+          : 'linear-gradient(135deg, #cbd5e0 0%, #94a3b8 100%)'
+        };
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
     }
-  }
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-
-  .main-content {
-    padding: 2rem;
-    width: 100% !important;
-    max-width: 1400px;
-    margin: 0 auto !important;
-    box-sizing: border-box;
-  }
-
-  .main-sections {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-bottom: 2rem;
-    width: 100% !important;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    justify-items: center;
-  }
-
-  .section-card {
-    background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%)'
-      : 'rgba(255, 255, 255, 0.9)'
-    };
-    backdrop-filter: blur(10px);
-    border: ${props => props.$isDark 
-      ? '1px solid rgba(255, 255, 255, 0.1)'
-      : '1px solid rgba(255, 255, 255, 0.2)'
-    };
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: ${props => props.$isDark 
-      ? '0 8px 32px rgba(0,0,0,0.3)'
-      : '0 8px 32px rgba(0,0,0,0.1)'
-    };
-    transition: all 0.3s ease;
-    min-height: 400px;
-    width: 100%;
-    max-width: 380px;
-    display: flex;
-    flex-direction: column;
-    justify-self: center;
-  }
-
-  .section-card:hover {
-    transform: translateY(-5px);
-    box-shadow: ${props => props.$isDark 
-      ? '0 12px 48px rgba(0,0,0,0.4)'
-      : '0 12px 48px rgba(0,0,0,0.15)'
-    };
-  }
-
-  .card-header h2 {
-    font-size: 1.3rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
-  }
-    color: #2c3e50;
-  }
-
-  .card-header p {
-    color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .oferta-academica {
-    border-left: 5px solid #087799;
-  }
-
-  .course-list {
-    flex: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .course-item {
-    padding: 1rem;
-    margin-bottom: 0.8rem;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .matematicas { 
-    background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, #5a5aa8 0%, #4b4b94 100%)'
-      : 'linear-gradient(135deg, #6969bc 0%, #5a5aa8 100%)'
-    }; 
-    color: white; 
-  }
-  .fisica { 
-    background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, #e6690a 0%, #d55d09 100%)'
-      : 'linear-gradient(135deg, #F7750b 0%, #e6690a 100%)'
-    }; 
-    color: white; 
-  }
-  .quimica { 
-    background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, #076687 0%, #065575 100%)'
-      : 'linear-gradient(135deg, #087799 0%, #076687 100%)'
-    }; 
-    color: white; 
-  }
-
-  .course-label {
-    font-weight: bold;
-    font-size: 1rem;
-  }
-
-  .course-desc {
-    font-size: 0.85rem;
-    opacity: 0.9;
-  }
-
-  .mis-cursos {
-    border-left: 5px solid #1abc9c;
-    background: linear-gradient(135deg, #f0fff4 0%, #e8f8f5 100%);
-  }
-
-  .stats-section {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  }
-
-  .stat {
-    text-align: center;
-  }
-
-  .stat-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #1abc9c;
-  }
-
-  .stat-label {
-    font-size: 0.9rem;
-    color: #7f8c8d;
-  }
-
-  .progress-courses {
-    flex: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .course-progress {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
-
-  .course-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-  }
-
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background-color: #ecf0f1;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 0.3rem;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #1abc9c 0%, #16a085 100%);
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-
-  .progress-text {
-    font-size: 0.8rem;
-    color: #1abc9c;
-    font-weight: bold;
-    text-align: right;
-  }
-
-  .simulacros {
-    border-left: 5px solid #e74c3c;
-  }
-
-  .simulacros-options {
-    flex: 1;
-    margin-bottom: 1.5rem;
-  }
-
-  .simulacro-option {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    margin-bottom: 0.8rem;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-
-  .simulacro-option:hover {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-    color: white;
-    transform: translateX(5px);
-  }
-
-  .simulacro-option .icon {
-    font-size: 1.5rem;
-  }
-
-  .action-button {
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-  }
-
-  .action-button.primary {
-    background: linear-gradient(135deg, #18e2a2 0%, #15c78a 100%);
-    color: white;
-  }
-
-  .action-button.secondary {
-    background: linear-gradient(135deg, #087799 0%, #076687 100%);
-    color: white;
-  }
-
-  .action-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   }
 
   .news-section {
     background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%)'
-      : 'rgba(255, 255, 255, 0.9)'
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%)' 
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
     };
-    backdrop-filter: blur(10px);
-    border: ${props => props.$isDark 
-      ? '1px solid rgba(255, 255, 255, 0.1)'
-      : '1px solid rgba(255, 255, 255, 0.2)'
-    };
+    backdrop-filter: blur(25px);
     border-radius: 20px;
     padding: 2rem;
-    box-shadow: ${props => props.$isDark 
-      ? '0 8px 32px rgba(0,0,0,0.3)'
-      : '0 8px 32px rgba(0,0,0,0.1)'
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
     };
-    border-left: 5px solid #F7750b;
-    width: 100% !important;
-    max-width: 1200px;
-    margin: 0 auto !important;
-    box-sizing: border-box;
+    box-shadow: ${props => props.$isDark 
+      ? '0 10px 30px rgba(0, 0, 0, 0.3)' 
+      : '0 10px 30px rgba(0, 0, 0, 0.1)'
+    };
+    border-left: 4px solid var(--color-bachillerato);
   }
 
   .news-title {
-    color: ${props => props.$isDark ? '#F7750b' : '#F7750b'};
-    font-size: 1.8rem;
-    font-weight: bold;
+    color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
     text-align: center;
-    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--color-bachillerato), var(--color-e-kids));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .news-content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.2rem;
   }
 
   .news-item {
     padding: 1.5rem;
-    background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.5) 0%, rgba(30, 41, 59, 0.5) 100%)'
-      : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
-    };
     border-radius: 15px;
-    border-left: 4px solid #18e2a2;
-  }
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.5) 0%, rgba(71, 85, 105, 0.3) 100%)'
+      : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%)'
+    };
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--color-secondary);
 
-  .news-item h3 {
-    color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
-    font-size: 1.1rem;
-    margin-bottom: 0.8rem;
-  }
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(24, 226, 162, 0.2);
+    }
 
-  .news-item p {
-    color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
-  }
-
-  .news-item small {
-    color: ${props => props.$isDark ? '#64748b' : '#94a3b8'};
-    font-size: 0.8rem;
-  }
-
-  @media (max-width: 1200px) {
-    .main-sections {
-      grid-template-columns: repeat(2, 1fr);
-      max-width: 800px;
+    h3 {
+      color: ${props => props.$isDark ? '#f1f5f9' : '#1e293b'};
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
     }
     
-    .section-card {
-      max-width: 100%;
+    p {
+      color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+    
+    small {
+      color: ${props => props.$isDark ? '#64748b' : '#94a3b8'};
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+
+  /* Enhanced Responsive Design */
+  @media (max-width: 1200px) {
+    .main-sections {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
     }
   }
 
   @media (max-width: 768px) {
     .main-content {
-      padding: 1rem;
+      padding: 1.5rem 1rem;
     }
     
     .main-sections {
       grid-template-columns: 1fr;
       gap: 1.5rem;
-      max-width: 400px;
     }
     
     .section-card {
       padding: 1.5rem;
-      max-width: 100%;
     }
     
-    .dashboard-header {
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
+    .header {
       padding: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .logo-section {
+      order: 1;
+    }
+    
+    .header-center {
+      order: 3;
+      width: 100%;
+      justify-content: center;
     }
     
     .user-profile {
-      justify-content: center;
+      order: 2;
     }
-
-    .logo-section {
-      justify-content: center;
-      
-      .logo-image {
-        height: 35px;
-      }
+    
+    .user-info {
+      display: none;
     }
     
     .news-section {
       padding: 1.5rem;
-      max-width: 400px;
+    }
+
+    .stats-section {
+      padding: 1rem;
+    }
+
+    .stat .stat-number {
+      font-size: 1.8rem;
     }
   }
 
   @media (max-width: 480px) {
     .main-content {
-      padding: 0.5rem;
+      padding: 1rem 0.5rem;
     }
     
     .section-card {
-      padding: 1rem;
-      min-height: 350px;
+      padding: 1.2rem;
     }
     
-    .dashboard-header {
-      padding: 0.5rem;
+    .header {
+      padding: 0.8rem;
+    }
+    
+    .logo-image {
+      height: 35px;
+    }
+    
+    .news-section {
+      padding: 1.2rem;
+    }
+
+    .course-item {
+      padding: 0.8rem;
+    }
+
+    .simulacro-option {
+      padding: 0.8rem;
     }
   }
 `;

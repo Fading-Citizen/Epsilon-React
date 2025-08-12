@@ -25,16 +25,16 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
   const [quizData, setQuizData] = useState({
     title: '',
     description: '',
-    type: type || 'quiz', // 'quiz' o 'exam'
-    timeLimit: type === 'exam' ? 120 : 15,
-    attempts: type === 'exam' ? 2 : 3,
-    passingGrade: type === 'exam' ? 75 : 70,
-    randomizeQuestions: false,
-    showCorrectAnswers: true,
-    allowRetake: true,
-    isIndependent: false,
-    courseId: '',
-    course: '',
+    type: type || 'quiz', // 'quiz', 'exam', 'simulacro'
+    timeLimit: type === 'exam' ? 120 : type === 'simulacro' ? 180 : 15,
+    attempts: type === 'exam' ? 2 : type === 'simulacro' ? 1 : 3,
+    passingGrade: type === 'exam' ? 75 : type === 'simulacro' ? 80 : 70,
+    randomizeQuestions: type === 'simulacro' ? true : false,
+    showCorrectAnswers: type === 'simulacro' ? false : true,
+    allowRetake: type === 'simulacro' ? false : true,
+    isIndependent: type === 'simulacro' ? true : false,
+    courseId: type === 'simulacro' ? 0 : '',
+    course: type === 'simulacro' ? 'Acceso Libre' : '',
     dueDate: '',
     assignedTo: [], // IDs de estudiantes/grupos
     status: 'draft' // 'draft', 'published', 'archived'
@@ -75,15 +75,15 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
         title: quiz.title || '',
         description: quiz.description || '',
         type: quiz.type || type || 'quiz',
-        timeLimit: quiz.timeLimit || (type === 'exam' ? 120 : 15),
-        attempts: quiz.attempts || (type === 'exam' ? 2 : 3),
-        passingGrade: quiz.passingGrade || (type === 'exam' ? 75 : 70),
-        randomizeQuestions: quiz.randomizeQuestions || false,
-        showCorrectAnswers: quiz.showCorrectAnswers !== undefined ? quiz.showCorrectAnswers : true,
-        allowRetake: quiz.allowRetake !== undefined ? quiz.allowRetake : true,
-        isIndependent: quiz.isIndependent || false,
-        courseId: quiz.courseId || (quiz.isIndependent ? 0 : ''),
-        course: quiz.course || '',
+        timeLimit: quiz.timeLimit || (type === 'exam' ? 120 : type === 'simulacro' ? 180 : 15),
+        attempts: quiz.attempts || (type === 'exam' ? 2 : type === 'simulacro' ? 1 : 3),
+        passingGrade: quiz.passingGrade || (type === 'exam' ? 75 : type === 'simulacro' ? 80 : 70),
+        randomizeQuestions: quiz.randomizeQuestions !== undefined ? quiz.randomizeQuestions : (type === 'simulacro'),
+        showCorrectAnswers: quiz.showCorrectAnswers !== undefined ? quiz.showCorrectAnswers : (type !== 'simulacro'),
+        allowRetake: quiz.allowRetake !== undefined ? quiz.allowRetake : (type !== 'simulacro'),
+        isIndependent: quiz.isIndependent !== undefined ? quiz.isIndependent : (type === 'simulacro'),
+        courseId: quiz.courseId !== undefined ? quiz.courseId : (type === 'simulacro' ? 0 : ''),
+        course: quiz.course || (type === 'simulacro' ? 'Acceso Libre' : ''),
         dueDate: quiz.dueDate || '',
         assignedTo: quiz.assignedTo || [],
         status: quiz.status || 'draft'
@@ -247,11 +247,13 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
     }
 
     if (!quizData.isIndependent && !quizData.courseId) {
-      alert('Debe seleccionar un curso o marcar como acceso libre');
+      alert(quizData.type === 'simulacro' 
+        ? 'Los simulacros son evaluaciones independientes'
+        : 'Debe seleccionar un curso o marcar como acceso libre');
       return;
     }
 
-    if (!quizData.isIndependent && !quizData.dueDate) {
+    if (!quizData.isIndependent && !quizData.dueDate && quizData.type !== 'simulacro') {
       alert('Las evaluaciones vinculadas a cursos requieren una fecha límite');
       return;
     }
@@ -294,6 +296,16 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
     return types[type] || type;
   };
 
+  // Función para obtener el nombre del tipo
+  const getTypeName = (type) => {
+    switch (type) {
+      case 'quiz': return 'Quiz';
+      case 'exam': return 'Examen';
+      case 'simulacro': return 'Simulacro';
+      default: return 'Evaluación';
+    }
+  };
+
   if (showQuestionForm) {
     return (
       <QuestionForm
@@ -318,7 +330,7 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
               Volver
             </button>
             <div className="quiz-info">
-              <h1>{quiz ? 'Editar' : 'Crear'} {quizData.type === 'quiz' ? 'Quiz' : 'Simulacro'}</h1>
+              <h1>{quiz ? 'Editar' : 'Crear'} {getTypeName(quizData.type)}</h1>
               <span className="quiz-status">{quizData.status === 'published' ? 'Publicado' : 'Borrador'}</span>
             </div>
           </div>
@@ -368,7 +380,7 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
               {/* Quiz Basic Info */}
               <div className="quiz-basic-info">
                 <div className="form-group">
-                  <label>Título del {quizData.type === 'quiz' ? 'Quiz' : 'Simulacro'}</label>
+                  <label>Título del {getTypeName(quizData.type)}</label>
                   <input
                     type="text"
                     value={quizData.title}
@@ -527,6 +539,7 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
                     <select 
                       value={quizData.courseId || ''}
                       onChange={(e) => handleQuizChange('courseId', e.target.value)}
+                      disabled={quizData.type === 'simulacro'}
                     >
                       <option value="">Seleccionar curso</option>
                       {availableCourses.map(course => (
@@ -537,7 +550,10 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
                     </select>
                     {quizData.isIndependent && (
                       <small className="independent-note">
-                        Esta evaluación será de acceso libre para todos los estudiantes
+                        {quizData.type === 'simulacro' 
+                          ? 'Los simulacros son evaluaciones independientes disponibles para todos los estudiantes'
+                          : 'Esta evaluación será de acceso libre para todos los estudiantes'
+                        }
                       </small>
                     )}
                   </div>

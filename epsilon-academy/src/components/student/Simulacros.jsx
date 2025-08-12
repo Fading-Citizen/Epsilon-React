@@ -439,76 +439,159 @@ const Simulacros = () => {
 };
 
 const StyledWrapper = styled.div`
+  width: 100vw;
+  min-height: 100vh;
+  background: ${props => props.$isDark 
+    ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a1a2e 100%)'
+    : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #c3cfe2 100%)'
+  };
+  margin: 0;
+  padding: 0;
+  transition: background 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+
+  /* CSS Variables for consistent theming */
+  --color-e-kids: #f0e23d;
+  --color-bachillerato: #f7750b;
+  --color-pre-u: #6969bc;
+  --color-profes: #087799;
+  --color-secondary: #18e2a2;
+
+  /* Enhanced Background Animation */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${props => props.$isDark 
+      ? 'radial-gradient(circle at 20% 80%, rgba(105, 105, 188, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(8, 119, 153, 0.15) 0%, transparent 50%)'
+      : 'radial-gradient(circle at 20% 80%, rgba(105, 105, 188, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(8, 119, 153, 0.08) 0%, transparent 50%)'
+    };
+    animation: backgroundFloat 25s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes backgroundFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(15px, -15px) rotate(2deg); }
+  }
+
   .simulacros-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem 2rem 2rem 2rem;
-    background: ${({ $isDark }) => 
-      $isDark 
-        ? 'linear-gradient(135deg, rgba(16, 20, 31, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%)'
-        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)'
-    };
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: ${({ $isDark }) => 
-      $isDark 
-        ? '1px solid rgba(255, 255, 255, 0.1)'
-        : '1px solid rgba(0, 0, 0, 0.05)'
-    };
+    width: 100%;
+    padding: 2.5rem 2rem;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .stats-overview {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
     margin-bottom: 3rem;
 
     .stat-card {
-      background: ${({ $isDark }) => 
-        $isDark 
-          ? 'rgba(30, 41, 59, 0.6)'
-          : 'rgba(255, 255, 255, 0.8)'
+      background: ${props => props.$isDark 
+        ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%)'
+        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
       };
-      backdrop-filter: blur(10px);
-      border: ${({ $isDark }) => 
-        $isDark 
-          ? '1px solid rgba(255, 255, 255, 0.1)'
-          : '1px solid rgba(0, 0, 0, 0.05)'
+      backdrop-filter: blur(25px);
+      border: 1px solid ${props => props.$isDark 
+        ? 'rgba(71, 85, 105, 0.3)' 
+        : 'rgba(226, 232, 240, 0.5)'
       };
-      border-radius: 12px;
-      padding: 1.5rem;
+      border-radius: 20px;
+      padding: 2rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
-      box-shadow: ${({ $isDark }) => 
-        $isDark 
-          ? '0 8px 32px rgba(0, 0, 0, 0.3)'
-          : '0 4px 20px rgba(0, 0, 0, 0.1)'
+      gap: 1.5rem;
+      box-shadow: ${props => props.$isDark 
+        ? '0 10px 30px rgba(0, 0, 0, 0.3)'
+        : '0 10px 30px rgba(0, 0, 0, 0.1)'
       };
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--color-profes), var(--color-secondary), var(--color-pre-u));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: ${props => props.$isDark 
+          ? '0 20px 50px rgba(0, 0, 0, 0.4)'
+          : '0 20px 50px rgba(0, 0, 0, 0.15)'
+        };
+
+        &::before {
+          opacity: 1;
+        }
+
+        .stat-icon {
+          transform: scale(1.1) rotate(5deg);
+        }
+      }
 
       .stat-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
+        transition: transform 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          transition: width 0.6s, height 0.6s;
+          transform: translate(-50%, -50%);
+        }
+
+        &:hover::after {
+          width: 100px;
+          height: 100px;
+        }
 
         &.disponibles {
-          background: linear-gradient(135deg, #087799, #0891b2);
+          background: linear-gradient(135deg, var(--color-profes) 0%, #065575 100%);
         }
 
         &.completados {
-          background: linear-gradient(135deg, #18e2a2, #10b981);
+          background: linear-gradient(135deg, var(--color-secondary) 0%, #12b172 100%);
         }
 
         &.programados {
-          background: linear-gradient(135deg, #F7750b, #ea580c);
+          background: linear-gradient(135deg, var(--color-bachillerato) 0%, #d55d09 100%);
         }
 
         &.promedio {
-          background: linear-gradient(135deg, #6969bc, #5b21b6);
+          background: linear-gradient(135deg, var(--color-pre-u) 0%, #4b4b94 100%);
         }
       }
 
@@ -517,18 +600,21 @@ const StyledWrapper = styled.div`
         flex-direction: column;
 
         .stat-number {
-          font-size: 1.8rem;
-          font-weight: 700;
-          color: ${({ $isDark }) => 
-            $isDark ? '#f1f5f9' : '#2c3e50'
-          };
+          font-size: 2.2rem;
+          font-weight: 800;
+          color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+          line-height: 1;
+          background: linear-gradient(135deg, var(--color-profes), var(--color-secondary));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
 
         .stat-label {
-          font-size: 0.9rem;
-          color: ${({ $isDark }) => 
-            $isDark ? '#94a3b8' : '#7f8c8d'
-          };
+          font-size: 1rem;
+          color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+          margin-top: 0.5rem;
+          font-weight: 600;
         }
       }
     }
@@ -536,55 +622,65 @@ const StyledWrapper = styled.div`
 
   .filters-section {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
     align-items: center;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)'
+    };
+    backdrop-filter: blur(20px);
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
+    };
+    box-shadow: ${props => props.$isDark 
+      ? '0 8px 25px rgba(0, 0, 0, 0.2)'
+      : '0 8px 25px rgba(0, 0, 0, 0.1)'
+    };
 
     .search-bar {
       position: relative;
       flex: 1;
-      max-width: 400px;
+      max-width: 500px;
 
       svg {
         position: absolute;
-        left: 1rem;
+        left: 1.5rem;
         top: 50%;
         transform: translateY(-50%);
-        color: ${({ $isDark }) => 
-          $isDark ? '#94a3b8' : '#7f8c8d'
-        };
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+        z-index: 1;
       }
 
       input {
         width: 100%;
-        padding: 0.75rem 1rem 0.75rem 3rem;
-        border: ${({ $isDark }) => 
-          $isDark 
-            ? '2px solid rgba(255, 255, 255, 0.1)'
-            : '2px solid #ecf0f1'
+        padding: 1rem 1.5rem 1rem 4rem;
+        border: 2px solid ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.3)'
+          : 'rgba(226, 232, 240, 0.5)'
         };
-        background: ${({ $isDark }) => 
-          $isDark 
-            ? 'rgba(30, 41, 59, 0.6)'
-            : 'rgba(255, 255, 255, 0.8)'
+        background: ${props => props.$isDark 
+          ? 'rgba(51, 65, 85, 0.6)'
+          : 'rgba(255, 255, 255, 0.8)'
         };
-        color: ${({ $isDark }) => 
-          $isDark ? '#f1f5f9' : '#2c3e50'
-        };
-        border-radius: 8px;
+        color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+        border-radius: 15px;
         font-size: 1rem;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease;
 
         &:focus {
           outline: none;
-          border-color: #087799;
-          box-shadow: 0 0 0 3px rgba(8, 119, 153, 0.1);
+          border-color: var(--color-profes);
+          box-shadow: 0 0 0 4px rgba(8, 119, 153, 0.15);
+          transform: translateY(-2px);
         }
 
         &::placeholder {
-          color: ${({ $isDark }) => 
-            $isDark ? '#64748b' : '#94a3b8'
-          };
+          color: ${props => props.$isDark ? '#64748b' : '#94a3b8'};
         }
       }
     }
@@ -592,32 +688,34 @@ const StyledWrapper = styled.div`
     .category-filter {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.8rem;
+      
+      svg {
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+      }
       
       select {
-        padding: 0.75rem 1rem;
-        border: ${({ $isDark }) => 
-          $isDark 
-            ? '2px solid rgba(255, 255, 255, 0.1)'
-            : '2px solid #ecf0f1'
+        padding: 1rem 1.5rem;
+        border: 2px solid ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.3)'
+          : 'rgba(226, 232, 240, 0.5)'
         };
-        background: ${({ $isDark }) => 
-          $isDark 
-            ? 'rgba(30, 41, 59, 0.6)'
-            : 'rgba(255, 255, 255, 0.8)'
+        background: ${props => props.$isDark 
+          ? 'rgba(51, 65, 85, 0.6)'
+          : 'rgba(255, 255, 255, 0.8)'
         };
-        color: ${({ $isDark }) => 
-          $isDark ? '#f1f5f9' : '#2c3e50'
-        };
-        border-radius: 8px;
+        color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+        border-radius: 15px;
         font-size: 1rem;
         cursor: pointer;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease;
 
         &:focus {
           outline: none;
-          border-color: #087799;
-          box-shadow: 0 0 0 3px rgba(8, 119, 153, 0.1);
+          border-color: var(--color-profes);
+          box-shadow: 0 0 0 4px rgba(8, 119, 153, 0.15);
+          transform: translateY(-2px);
         }
       }
     }
@@ -625,254 +723,411 @@ const StyledWrapper = styled.div`
 
   .tabs-nav {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-    border-bottom: ${({ $isDark }) => 
-      $isDark 
-        ? '2px solid rgba(255, 255, 255, 0.1)'
-        : '2px solid #ecf0f1'
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    justify-content: center;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)'
+    };
+    backdrop-filter: blur(20px);
+    padding: 1rem;
+    border-radius: 20px;
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
+    };
+    box-shadow: ${props => props.$isDark 
+      ? '0 8px 25px rgba(0, 0, 0, 0.2)'
+      : '0 8px 25px rgba(0, 0, 0, 0.1)'
     };
 
     .tab {
-      background: none;
-      border: none;
-      padding: 1rem 1.5rem;
+      background: ${props => props.$isDark 
+        ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.7) 0%, rgba(71, 85, 105, 0.5) 100%)'
+        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.6) 100%)'
+      };
+      border: 2px solid ${props => props.$isDark 
+        ? 'rgba(71, 85, 105, 0.3)'
+        : 'rgba(226, 232, 240, 0.5)'
+      };
+      padding: 1rem 2rem;
       cursor: pointer;
-      border-radius: 8px 8px 0 0;
-      transition: all 0.3s;
+      border-radius: 15px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      font-weight: 500;
-      color: ${({ $isDark }) => 
-        $isDark ? '#94a3b8' : '#7f8c8d'
-      };
+      gap: 0.8rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+      backdrop-filter: blur(15px);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover::before {
+        left: 100%;
+      }
 
       &:hover {
-        background: ${({ $isDark }) => 
-          $isDark 
-            ? 'rgba(8, 119, 153, 0.2)'
-            : 'rgba(8, 119, 153, 0.1)'
+        background: ${props => props.$isDark 
+          ? 'linear-gradient(135deg, rgba(8, 119, 153, 0.4) 0%, rgba(105, 105, 188, 0.2) 100%)'
+          : 'linear-gradient(135deg, rgba(8, 119, 153, 0.2) 0%, rgba(105, 105, 188, 0.1) 100%)'
         };
-        color: #087799;
+        color: var(--color-profes);
+        border-color: var(--color-profes);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(8, 119, 153, 0.3);
       }
 
       &.active {
-        background: linear-gradient(135deg, #087799, #0891b2);
+        background: linear-gradient(135deg, var(--color-profes) 0%, var(--color-pre-u) 100%);
         color: white;
-        border-bottom: 2px solid #087799;
+        border-color: var(--color-profes);
+        box-shadow: 0 8px 30px rgba(8, 119, 153, 0.4);
+        transform: translateY(-2px);
+
+        svg {
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+      }
+
+      svg {
+        transition: transform 0.3s ease;
+      }
+
+      &:hover svg,
+      &.active svg {
+        transform: scale(1.1);
       }
     }
   }
 
   .simulacros-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     gap: 2rem;
   }
 
   .simulacro-card {
-    background: ${({ $isDark }) => 
-      $isDark 
-        ? 'rgba(30, 41, 59, 0.6)'
-        : 'rgba(255, 255, 255, 0.8)'
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
     };
-    backdrop-filter: blur(10px);
-    border: ${({ $isDark }) => 
-      $isDark 
-        ? '1px solid rgba(255, 255, 255, 0.1)'
-        : '1px solid rgba(0, 0, 0, 0.05)'
+    backdrop-filter: blur(25px);
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
     };
-    border-radius: 12px;
-    box-shadow: ${({ $isDark }) => 
-      $isDark 
-        ? '0 8px 32px rgba(0, 0, 0, 0.3)'
-        : '0 4px 20px rgba(0, 0, 0, 0.1)'
+    border-radius: 20px;
+    box-shadow: ${props => props.$isDark 
+      ? '0 10px 30px rgba(0, 0, 0, 0.3)'
+      : '0 10px 30px rgba(0, 0, 0, 0.1)'
     };
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-e-kids), var(--color-bachillerato), var(--color-pre-u), var(--color-profes));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     &:hover {
-      transform: translateY(-4px);
-      box-shadow: ${({ $isDark }) => 
-        $isDark 
-          ? '0 12px 40px rgba(0, 0, 0, 0.4)'
-          : '0 8px 30px rgba(0, 0, 0, 0.15)'
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: ${props => props.$isDark 
+        ? '0 20px 50px rgba(0, 0, 0, 0.4)'
+        : '0 20px 50px rgba(0, 0, 0, 0.15)'
       };
+
+      &::before {
+        opacity: 1;
+      }
+
+      .tipo-icon {
+        transform: scale(1.1) rotate(10deg);
+      }
     }
 
     &.disponibles {
-      border-left: 4px solid #087799;
+      border-left: 4px solid var(--color-profes);
     }
 
     &.completados {
-      border-left: 4px solid #18e2a2;
+      border-left: 4px solid var(--color-secondary);
     }
 
     &.programados {
-      border-left: 4px solid #F7750b;
+      border-left: 4px solid var(--color-bachillerato);
     }
   }
 
   .simulacro-header {
-    padding: 1.5rem;
+    padding: 2rem;
     position: relative;
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: flex-start;
 
     .tipo-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #6969bc 0%, #5b21b6 100%);
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, var(--color-pre-u) 0%, #4b4b94 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       flex-shrink: 0;
+      transition: transform 0.3s ease;
+      box-shadow: 0 8px 25px rgba(105, 105, 188, 0.3);
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transition: width 0.6s, height 0.6s;
+        transform: translate(-50%, -50%);
+      }
+
+      &:hover::after {
+        width: 80px;
+        height: 80px;
+      }
     }
 
     .header-content {
       flex: 1;
 
       h3 {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: ${({ $isDark }) => 
-          $isDark ? '#f1f5f9' : '#2c3e50'
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+        margin-bottom: 0.8rem;
+        text-shadow: ${props => props.$isDark 
+          ? '1px 1px 2px rgba(0, 0, 0, 0.3)' 
+          : '1px 1px 2px rgba(0, 0, 0, 0.1)'
         };
-        margin-bottom: 0.5rem;
       }
 
       p {
-        color: ${({ $isDark }) => 
-          $isDark ? '#94a3b8' : '#7f8c8d'
-        };
-        font-size: 0.9rem;
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+        font-size: 1rem;
         margin: 0;
-        line-height: 1.4;
+        line-height: 1.5;
+        font-weight: 500;
       }
     }
 
     .importante-badge {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: #e74c3c;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
       color: white;
       border-radius: 50%;
-      padding: 0.5rem;
+      padding: 0.8rem;
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
     }
   }
 
   .simulacro-details {
-    padding: 0 1.5rem;
+    padding: 0 2rem;
 
     .detail-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.5rem 0;
-      border-bottom: ${({ $isDark }) => 
-        $isDark 
-          ? '1px solid rgba(255, 255, 255, 0.1)'
-          : '1px solid #ecf0f1'
+      padding: 1rem 0;
+      border-bottom: 1px solid ${props => props.$isDark 
+        ? 'rgba(71, 85, 105, 0.3)' 
+        : 'rgba(226, 232, 240, 0.5)'
       };
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.1)' 
+          : 'rgba(248, 250, 252, 0.5)'
+        };
+        margin: 0 -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border-radius: 10px;
+      }
 
       &:last-child {
         border-bottom: none;
       }
 
       .label {
-        color: ${({ $isDark }) => 
-          $isDark ? '#94a3b8' : '#7f8c8d'
-        };
-        font-size: 0.9rem;
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+        font-size: 1rem;
+        font-weight: 600;
       }
 
       .dificultad-badge {
         color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
 
       .score {
-        font-weight: 600;
-        color: ${({ $isDark }) => 
-          $isDark ? '#f1f5f9' : '#2c3e50'
-        };
+        font-weight: 700;
+        color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+        font-size: 1rem;
       }
 
       .calificacion {
-        font-weight: 600;
-        color: #18e2a2;
+        font-weight: 700;
+        color: var(--color-secondary);
+        font-size: 1.1rem;
       }
     }
   }
 
   .tags {
-    padding: 1rem 1.5rem;
+    padding: 1.5rem 2rem;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.8rem;
 
     .tag {
-      background: ${({ $isDark }) => 
-        $isDark 
-          ? 'rgba(255, 255, 255, 0.1)'
-          : '#ecf0f1'
+      background: ${props => props.$isDark 
+        ? 'linear-gradient(135deg, rgba(71, 85, 105, 0.4) 0%, rgba(51, 65, 85, 0.3) 100%)'
+        : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(226, 232, 240, 0.6) 100%)'
       };
-      color: ${({ $isDark }) => 
-        $isDark ? '#cbd5e1' : '#7f8c8d'
+      color: ${props => props.$isDark ? '#e2e8f0' : '#64748b'};
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      border: 1px solid ${props => props.$isDark 
+        ? 'rgba(71, 85, 105, 0.3)' 
+        : 'rgba(226, 232, 240, 0.4)'
       };
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        background: ${props => props.$isDark 
+          ? 'linear-gradient(135deg, rgba(8, 119, 153, 0.4) 0%, rgba(24, 226, 162, 0.2) 100%)'
+          : 'linear-gradient(135deg, rgba(8, 119, 153, 0.2) 0%, rgba(24, 226, 162, 0.1) 100%)'
+        };
+        color: var(--color-profes);
+        border-color: var(--color-profes);
+      }
     }
   }
 
   .simulacro-footer {
-    padding: 1.5rem;
+    padding: 2rem;
 
     .action-btn {
       border: none;
-      border-radius: 6px;
-      font-weight: 500;
+      border-radius: 15px;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.8rem;
       justify-content: center;
+      font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transition: width 0.6s, height 0.6s;
+        transform: translate(-50%, -50%);
+      }
+
+      &:active::before {
+        width: 300px;
+        height: 300px;
+      }
 
       &:hover:not(:disabled) {
-        transform: translateY(-1px);
+        transform: translateY(-3px);
       }
 
       &.iniciar {
         width: 100%;
-        padding: 0.75rem;
-        background: linear-gradient(135deg, #087799, #0891b2);
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, var(--color-profes) 0%, var(--color-secondary) 100%);
         color: white;
+        box-shadow: 0 8px 25px rgba(8, 119, 153, 0.3);
+
+        &:hover {
+          background: linear-gradient(135deg, #0a8db5 0%, #20f5c7 100%);
+          box-shadow: 0 12px 35px rgba(8, 119, 153, 0.4);
+        }
       }
 
       &.resultados {
-        padding: 0.5rem 1rem;
-        background: #18e2a2;
+        padding: 0.8rem 1.5rem;
+        background: linear-gradient(135deg, var(--color-secondary) 0%, #12b172 100%);
         color: white;
+        box-shadow: 0 6px 20px rgba(24, 226, 162, 0.3);
+
+        &:hover {
+          background: linear-gradient(135deg, #20f5c7 0%, #0ea572 100%);
+          box-shadow: 0 10px 30px rgba(24, 226, 162, 0.4);
+        }
       }
 
       &.programado {
-        padding: 0.5rem 1rem;
-        background: ${({ $isDark }) => 
-          $isDark ? '#475569' : '#95a5a6'
+        padding: 0.8rem 1.5rem;
+        background: ${props => props.$isDark 
+          ? 'linear-gradient(135deg, #64748b 0%, #475569 100%)'
+          : 'linear-gradient(135deg, #94a3b8 0%, #64748b 100%)'
         };
         color: white;
         cursor: not-allowed;
+        box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
 
         &:disabled {
           opacity: 0.7;
@@ -886,10 +1141,16 @@ const StyledWrapper = styled.div`
       align-items: center;
 
       .completion-date, .countdown {
-        font-size: 0.9rem;
-        color: ${({ $isDark }) => 
-          $isDark ? '#94a3b8' : '#7f8c8d'
+        font-size: 1rem;
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        background: ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.3)' 
+          : 'rgba(248, 250, 252, 0.8)'
         };
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
       }
     }
   }
@@ -897,49 +1158,118 @@ const StyledWrapper = styled.div`
   .no-results {
     text-align: center;
     padding: 4rem 2rem;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(51, 65, 85, 0.4) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.6) 100%)'
+    };
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
+    };
 
     h3 {
-      color: ${({ $isDark }) => 
-        $isDark ? '#94a3b8' : '#7f8c8d'
-      };
-      margin-bottom: 0.5rem;
+      color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
     }
 
     p {
-      color: ${({ $isDark }) => 
-        $isDark ? '#64748b' : '#bdc3c7'
-      };
+      color: ${props => props.$isDark ? '#64748b' : '#94a3b8'};
+      font-size: 1.1rem;
+      font-weight: 500;
     }
   }
 
-  @media (max-width: 768px) {
-    .simulacros-container {
-      padding: 1rem;
+  /* Enhanced Responsive Design */
+  @media (max-width: 1200px) {
+    .simulacros-grid {
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     }
 
     .stats-overview {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  @media (max-width: 768px) {
+    .simulacros-container {
+      padding: 1.5rem 1rem;
+    }
+
+    .stats-overview {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
 
     .filters-section {
       flex-direction: column;
       align-items: stretch;
+      gap: 1rem;
     }
 
     .tabs-nav {
       flex-direction: column;
+      gap: 0.8rem;
 
       .tab {
-        border-radius: 6px;
+        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
       }
+    }
+
+    .simulacros-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .simulacro-header {
+      padding: 1.5rem;
+      gap: 1rem;
+    }
+
+    .simulacro-details {
+      padding: 0 1.5rem;
+    }
+
+    .tags {
+      padding: 1rem 1.5rem;
+    }
+
+    .simulacro-footer {
+      padding: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stats-overview {
+      grid-template-columns: 1fr;
+    }
+
+    .tabs-nav {
+      margin-bottom: 2rem;
     }
 
     .simulacros-grid {
       grid-template-columns: 1fr;
     }
 
-    .header h1 {
-      font-size: 2rem;
+    .simulacro-header {
+      padding: 1.2rem;
+    }
+
+    .simulacro-details {
+      padding: 0 1.2rem;
+    }
+
+    .tags {
+      padding: 1rem 1.2rem;
+    }
+
+    .simulacro-footer {
+      padding: 1.2rem;
     }
   }
 `;

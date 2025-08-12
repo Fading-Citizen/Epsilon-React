@@ -14,9 +14,9 @@ import {
   Filter
 } from 'lucide-react';
 
-const CourseManager = ({ onCreateCourse, onEditCourse }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+const CourseManager = ({ viewMode = 'cards', filters = {}, onCreateCourse, onEditCourse }) => {
+  const [sortBy, setSortBy] = useState('title');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   // Datos de ejemplo de cursos
   const courses = [
@@ -65,10 +65,16 @@ const CourseManager = ({ onCreateCourse, onEditCourse }) => {
   ];
 
   const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         course.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'all' || course.status === filterStatus;
-    return matchesSearch && matchesFilter;
+    const searchText = filters.search || '';
+    const statusFilter = filters.status || 'all';
+    const categoryFilter = filters.category || 'all';
+    
+    const matchesSearch = course.title.toLowerCase().includes(searchText.toLowerCase()) ||
+                         course.category.toLowerCase().includes(searchText.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || course.status === statusFilter;
+    const matchesCategory = categoryFilter === 'all' || course.category.toLowerCase().includes(categoryFilter.toLowerCase());
+    
+    return matchesSearch && matchesStatus && matchesCategory;
   });
 
   const getStatusColor = (status) => {
@@ -92,58 +98,27 @@ const CourseManager = ({ onCreateCourse, onEditCourse }) => {
   return (
     <StyledWrapper>
       <div className="course-manager">
-        {/* Header */}
-        <div className="manager-header">
-          <div className="header-left">
-            <h2>Gestión de Cursos</h2>
-            <p>Administra todos tus cursos desde aquí</p>
-          </div>
-          <button className="create-course-btn" onClick={onCreateCourse}>
-            <Plus size={20} />
-            Crear Nuevo Curso
-          </button>
-        </div>
+        {/* Courses Display */}
+        <div className={`courses-container ${viewMode}`}>
+          {viewMode === 'cards' ? (
+            // Vista de Tarjetas
+            <div className="courses-grid">
+              {filteredCourses.map(course => (
+                <div key={course.id} className="course-card">
+                  <div className="course-image">
+                    <img src={course.image} alt={course.title} />
+                    <div className="course-status">
+                      <span 
+                        className="status-badge" 
+                        style={{ backgroundColor: getStatusColor(course.status) }}
+                      >
+                        {getStatusText(course.status)}
+                      </span>
+                    </div>
+                  </div>
 
-        {/* Filters and Search */}
-        <div className="filters-section">
-          <div className="search-box">
-            <Search size={20} />
-            <input
-              type="text"
-              placeholder="Buscar cursos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="filter-dropdown">
-            <Filter size={20} />
-            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-              <option value="all">Todos los estados</option>
-              <option value="published">Publicados</option>
-              <option value="draft">Borradores</option>
-              <option value="archived">Archivados</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Courses Grid */}
-        <div className="courses-grid">
-          {filteredCourses.map(course => (
-            <div key={course.id} className="course-card">
-              <div className="course-image">
-                <img src={course.image} alt={course.title} />
-                <div className="course-status">
-                  <span 
-                    className="status-badge" 
-                    style={{ backgroundColor: getStatusColor(course.status) }}
-                  >
-                    {getStatusText(course.status)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="course-content">
-                <div className="course-header">
+                  <div className="course-content">
+                    <div className="course-header">
                   <h3>{course.title}</h3>
                   <span className="course-category">{course.category}</span>
                 </div>
@@ -202,18 +177,91 @@ const CourseManager = ({ onCreateCourse, onEditCourse }) => {
             </div>
           ))}
         </div>
+          ) : (
+            // Vista de Lista
+            <div className="courses-list">
+              <div className="list-header">
+                <div className="col-course">Curso</div>
+                <div className="col-category">Categoría</div>
+                <div className="col-students">Estudiantes</div>
+                <div className="col-lessons">Lecciones</div>
+                <div className="col-price">Precio</div>
+                <div className="col-status">Estado</div>
+                <div className="col-actions">Acciones</div>
+              </div>
+              {filteredCourses.map(course => (
+                <div key={course.id} className={`list-row ${course.status}`}>
+                  <div className="col-course">
+                    <div className="course-info-compact">
+                      <div className="course-thumbnail">
+                        <img src={course.image} alt={course.title} />
+                      </div>
+                      <div>
+                        <h4>{course.title}</h4>
+                        <span className="creation-date">
+                          {new Date(course.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-category">{course.category}</div>
+                  <div className="col-students">
+                    <div className="students-info">
+                      <Users size={14} />
+                      <span>{course.students}</span>
+                    </div>
+                  </div>
+                  <div className="col-lessons">
+                    <div className="lessons-info">
+                      <PlayCircle size={14} />
+                      <span>{course.lessons}</span>
+                    </div>
+                  </div>
+                  <div className="col-price">
+                    <span className="price-badge">${course.price}</span>
+                  </div>
+                  <div className="col-status">
+                    <span 
+                      className="status-badge compact"
+                      style={{ backgroundColor: getStatusColor(course.status) }}
+                    >
+                      {getStatusText(course.status)}
+                    </span>
+                  </div>
+                  <div className="col-actions">
+                    <div className="action-buttons">
+                      <button 
+                        className="action-btn edit"
+                        onClick={() => onEditCourse(course.id)}
+                        title="Editar"
+                      >
+                        <Edit3 size={16} />
+                      </button>
+                      <button 
+                        className="action-btn preview"
+                        title="Vista previa"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {filteredCourses.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon">📚</div>
             <h3>No se encontraron cursos</h3>
             <p>
-              {searchTerm || filterStatus !== 'all' 
+              {filters.search || filters.status !== 'all' 
                 ? 'Intenta cambiar los filtros de búsqueda'
                 : 'Comienza creando tu primer curso'
               }
             </p>
-            {!searchTerm && filterStatus === 'all' && (
+            {!filters.search && filters.status === 'all' && (
               <button className="create-first-course" onClick={onCreateCourse}>
                 <Plus size={20} />
                 Crear mi primer curso
@@ -230,44 +278,6 @@ const StyledWrapper = styled.div`
   .course-manager {
     max-width: 1200px;
     margin: 0 auto;
-  }
-
-  .manager-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .header-left h2 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-  }
-
-  .header-left p {
-    color: #64748b;
-    margin: 0;
-  }
-
-  .create-course-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .create-course-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(26, 188, 156, 0.3);
   }
 
   /* Filters Section */
@@ -311,10 +321,10 @@ const StyledWrapper = styled.div`
 
   /* Courses Grid */
   .courses-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+    display: grid !important;
+    gap: 1.5rem !important;
     margin-bottom: 2rem;
+    width: 100% !important;
   }
 
   .course-card {
@@ -440,6 +450,10 @@ const StyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+
+    svg {
+      flex-shrink: 0;
+    }
   }
 
   .action-btn.edit {
@@ -498,6 +512,10 @@ const StyledWrapper = styled.div`
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+
+    svg {
+      flex-shrink: 0;
+    }
   }
 
   .create-first-course:hover {
@@ -529,6 +547,148 @@ const StyledWrapper = styled.div`
 
     .course-stats {
       justify-content: space-between;
+    }
+  }
+
+  /* Vista de Lista */
+  .courses-container.list .courses-list {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .list-header {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+  }
+
+  .list-row {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: center;
+    transition: background 0.2s ease;
+  }
+
+  .list-row:hover {
+    background: #f8fafc;
+  }
+
+  .list-row:last-child {
+    border-bottom: none;
+  }
+
+  .course-info-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .course-thumbnail {
+    width: 50px;
+    height: 35px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .course-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .course-info-compact h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    color: #2c3e50;
+  }
+
+  .course-info-compact .creation-date {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  .students-info, .lessons-info {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #64748b;
+  }
+
+  .price-badge {
+    background: #dcfce7;
+    color: #166534;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .status-badge.compact {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .action-btn {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  .action-btn:hover {
+    background: #f1f5f9;
+  }
+
+  .action-btn.edit { color: #f59e0b; }
+  .action-btn.preview { color: #3b82f6; }
+
+  /* Responsive para vista de lista */
+  @media (max-width: 768px) {
+    .list-header,
+    .list-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .list-header {
+      display: none;
+    }
+
+    .list-row {
+      display: block;
+      padding: 1rem;
+    }
+
+    .courses-container.cards .courses-grid {
+      grid-template-columns: 1fr;
     }
   }
 `;

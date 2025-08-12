@@ -234,28 +234,75 @@ const StyledWrapper = styled.div`
   width: 100vw;
   min-height: 100vh;
   background: ${props => props.$isDark 
-    ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
-    : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)'
+    ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1a1a2e 100%)'
+    : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #c3cfe2 100%)'
   };
   margin: 0;
   padding: 0;
   transition: background 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+
+  /* CSS Variables for consistent theming */
+  --color-e-kids: #f0e23d;
+  --color-bachillerato: #f7750b;
+  --color-pre-u: #6969bc;
+  --color-profes: #087799;
+  --color-secondary: #18e2a2;
+
+  /* Enhanced Background Animation */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${props => props.$isDark 
+      ? 'radial-gradient(circle at 20% 80%, rgba(8, 119, 153, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(247, 117, 11, 0.1) 0%, transparent 50%)'
+      : 'radial-gradient(circle at 20% 80%, rgba(8, 119, 153, 0.05) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(247, 117, 11, 0.05) 0%, transparent 50%)'
+    };
+    animation: backgroundShift 15s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes backgroundShift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-10px, -10px) scale(1.02); }
+  }
 
   .oferta-container {
     width: 100%;
-    padding: 1rem 2rem 2rem 2rem;
+    padding: 2rem;
     margin: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .filters-section {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
     align-items: center;
-    max-width: 1000px;
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
+    };
+    backdrop-filter: blur(25px);
+    border-radius: 20px;
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
+    };
+    box-shadow: ${props => props.$isDark 
+      ? '0 10px 30px rgba(0, 0, 0, 0.3)' 
+      : '0 10px 30px rgba(0, 0, 0, 0.1)'
+    };
 
     .search-bar {
       position: relative;
@@ -264,36 +311,51 @@ const StyledWrapper = styled.div`
 
       svg {
         position: absolute;
-        left: 1rem;
+        left: 1.2rem;
         top: 50%;
         transform: translateY(-50%);
-        color: #7f8c8d;
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+        transition: color 0.3s ease;
+        z-index: 2;
       }
 
       input {
         width: 100%;
-        padding: 0.75rem 1rem 0.75rem 3rem;
-        border: ${props => props.$isDark 
-          ? '2px solid rgba(255, 255, 255, 0.2)'
-          : '2px solid rgba(255, 255, 255, 0.3)'
+        padding: 1rem 1.2rem 1rem 3.5rem;
+        border: 2px solid ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.3)'
+          : 'rgba(226, 232, 240, 0.5)'
         };
-        border-radius: 8px;
+        border-radius: 15px;
         font-size: 1rem;
         background: ${props => props.$isDark 
-          ? 'rgba(51, 65, 85, 0.8)'
-          : 'rgba(255, 255, 255, 0.9)'
+          ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.8) 0%, rgba(71, 85, 105, 0.6) 100%)'
+          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)'
         };
         color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
+        backdrop-filter: blur(15px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: ${props => props.$isDark 
+          ? '0 4px 15px rgba(0, 0, 0, 0.2)'
+          : '0 4px 15px rgba(0, 0, 0, 0.1)'
+        };
 
         &:focus {
           outline: none;
-          border-color: #087799;
+          border-color: var(--color-profes);
           background: ${props => props.$isDark 
-            ? 'rgba(51, 65, 85, 1)'
-            : 'white'
+            ? 'linear-gradient(135deg, rgba(51, 65, 85, 1) 0%, rgba(71, 85, 105, 0.8) 100%)'
+            : 'linear-gradient(135deg, white 0%, rgba(248, 250, 252, 0.95) 100%)'
           };
+          transform: translateY(-2px);
+          box-shadow: ${props => props.$isDark 
+            ? '0 8px 25px rgba(8, 119, 153, 0.3)'
+            : '0 8px 25px rgba(8, 119, 153, 0.2)'
+          };
+        }
+
+        &:focus + svg {
+          color: var(--color-profes);
         }
 
         &::placeholder {
@@ -305,36 +367,51 @@ const StyledWrapper = styled.div`
     .category-filter {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.8rem;
       
       svg {
-        color: rgba(255, 255, 255, 0.8);
+        color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
+        transition: color 0.3s ease;
       }
 
       select {
-        padding: 0.75rem 1rem;
-        border: ${props => props.$isDark 
-          ? '2px solid rgba(255, 255, 255, 0.2)'
-          : '2px solid rgba(255, 255, 255, 0.3)'
+        padding: 1rem 1.2rem;
+        border: 2px solid ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.3)'
+          : 'rgba(226, 232, 240, 0.5)'
         };
-        border-radius: 8px;
+        border-radius: 15px;
         font-size: 1rem;
         background: ${props => props.$isDark 
-          ? 'rgba(51, 65, 85, 0.8)'
-          : 'rgba(255, 255, 255, 0.9)'
+          ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.8) 0%, rgba(71, 85, 105, 0.6) 100%)'
+          : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%)'
         };
         color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(15px);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: ${props => props.$isDark 
+          ? '0 4px 15px rgba(0, 0, 0, 0.2)'
+          : '0 4px 15px rgba(0, 0, 0, 0.1)'
+        };
 
         &:focus {
           outline: none;
-          border-color: #087799;
+          border-color: var(--color-profes);
           background: ${props => props.$isDark 
-            ? 'rgba(51, 65, 85, 1)'
-            : 'white'
+            ? 'linear-gradient(135deg, rgba(51, 65, 85, 1) 0%, rgba(71, 85, 105, 0.8) 100%)'
+            : 'linear-gradient(135deg, white 0%, rgba(248, 250, 252, 0.95) 100%)'
           };
+          transform: translateY(-2px);
+          box-shadow: ${props => props.$isDark 
+            ? '0 8px 25px rgba(8, 119, 153, 0.3)'
+            : '0 8px 25px rgba(8, 119, 153, 0.2)'
+          };
+        }
+
+        option {
+          background: ${props => props.$isDark ? '#1e293b' : '#ffffff'};
+          color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
         }
       }
     }
@@ -343,150 +420,235 @@ const StyledWrapper = styled.div`
   .stats-bar {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
     color: ${props => props.$isDark ? 'rgba(248, 250, 252, 0.8)' : 'rgba(30, 41, 59, 0.8)'};
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
     justify-content: center;
     text-shadow: ${props => props.$isDark 
-      ? '0 1px 2px rgba(0, 0, 0, 0.3)'
-      : '0 1px 2px rgba(0, 0, 0, 0.1)'
+      ? '0 2px 4px rgba(0, 0, 0, 0.3)'
+      : '0 2px 4px rgba(0, 0, 0, 0.1)'
     };
+    padding: 1rem;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.5) 0%, rgba(71, 85, 105, 0.3) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.6) 100%)'
+    };
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2.5rem;
   }
 
   .cursos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
     margin: 0 auto;
   }
 
   .curso-card {
     background: ${props => props.$isDark 
-      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(51, 65, 85, 0.6) 100%)'
-      : 'rgba(255, 255, 255, 0.9)'
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(51, 65, 85, 0.8) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)'
     };
-    backdrop-filter: blur(10px);
-    border: ${props => props.$isDark 
-      ? '1px solid rgba(255, 255, 255, 0.1)'
-      : '1px solid rgba(255, 255, 255, 0.2)'
+    backdrop-filter: blur(25px);
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
     };
-    border-radius: 12px;
+    border-radius: 20px;
     box-shadow: ${props => props.$isDark 
-      ? '0 4px 20px rgba(0, 0, 0, 0.3)'
-      : '0 4px 20px rgba(0, 0, 0, 0.1)'
+      ? '0 10px 30px rgba(0, 0, 0, 0.3)'
+      : '0 10px 30px rgba(0, 0, 0, 0.1)'
     };
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-e-kids), var(--color-bachillerato), var(--color-pre-u), var(--color-profes));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     &:hover {
-      transform: translateY(-4px);
+      transform: translateY(-8px) scale(1.02);
       box-shadow: ${props => props.$isDark 
-        ? '0 8px 30px rgba(0, 0, 0, 0.4)'
-        : '0 8px 30px rgba(0, 0, 0, 0.15)'
+        ? '0 20px 50px rgba(0, 0, 0, 0.4)'
+        : '0 20px 50px rgba(0, 0, 0, 0.15)'
       };
+
+      &::before {
+        opacity: 1;
+      }
+
+      .curso-image {
+        transform: scale(1.05);
+
+        .image-placeholder {
+          transform: rotate(10deg) scale(1.1);
+        }
+      }
+
+      .inscribir-btn {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(8, 119, 153, 0.4);
+      }
     }
   }
 
   .curso-image {
     position: relative;
-    height: 160px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.4s ease;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    &:hover::after {
+      left: 100%;
+    }
 
     .image-placeholder {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
       border-radius: 50%;
-      padding: 1rem;
-      backdrop-filter: blur(10px);
+      padding: 1.5rem;
+      backdrop-filter: blur(15px);
+      transition: transform 0.4s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
 
     .nivel-badge {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
+      top: 1.2rem;
+      right: 1.2rem;
+      padding: 0.4rem 1rem;
+      border-radius: 25px;
       color: white;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* Gradientes por categoría */
+    /* Enhanced gradients by category */
     &.matematicas {
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #5a5aa8 0%, #4b4b94 100%)'
-        : 'linear-gradient(135deg, #6969bc 0%, #5a5aa8 100%)'
+        ? 'linear-gradient(135deg, #5a5aa8 0%, #4b4b94 50%, #3a3a7a 100%)'
+        : 'linear-gradient(135deg, #6969bc 0%, #5a5aa8 50%, #4b4b94 100%)'
       };
     }
 
     &.fisica {
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #e6690a 0%, #d55d09 100%)'
-        : 'linear-gradient(135deg, #F7750b 0%, #e6690a 100%)'
+        ? 'linear-gradient(135deg, #e6690a 0%, #d55d09 50%, #c45208 100%)'
+        : 'linear-gradient(135deg, #F7750b 0%, #e6690a 50%, #d55d09 100%)'
       };
     }
 
     &.quimica {
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #076687 0%, #065575 100%)'
-        : 'linear-gradient(135deg, #087799 0%, #076687 100%)'
+        ? 'linear-gradient(135deg, #076687 0%, #065575 50%, #054463 100%)'
+        : 'linear-gradient(135deg, #087799 0%, #076687 50%, #065575 100%)'
       };
     }
 
     &.programacion {
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #15c78a 0%, #12b172 100%)'
-        : 'linear-gradient(135deg, #18e2a2 0%, #15c78a 100%)'
+        ? 'linear-gradient(135deg, #15c78a 0%, #12b172 50%, #0f9b5a 100%)'
+        : 'linear-gradient(135deg, #18e2a2 0%, #15c78a 50%, #12b172 100%)'
       };
     }
 
     &.historia {
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #d9cb35 0%, #c2b42e 100%)'
-        : 'linear-gradient(135deg, #F0E23D 0%, #d9cb35 100%)'
+        ? 'linear-gradient(135deg, #d9cb35 0%, #c2b42e 50%, #ab9d27 100%)'
+        : 'linear-gradient(135deg, #F0E23D 0%, #d9cb35 50%, #c2b42e 100%)'
       };
     }
 
     &.biologia {
       background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #15c78a 0%, #d9cb35 100%)'
-        : 'linear-gradient(135deg, #18e2a2 0%, #F0E23D 100%)'
+        ? 'linear-gradient(135deg, #15c78a 0%, #d9cb35 50%, #F7750b 100%)'
+        : 'linear-gradient(135deg, #18e2a2 0%, #F0E23D 50%, #F7750b 100%)'
       };
     }
   }
 
   .curso-content {
-    padding: 1.5rem;
+    padding: 2rem;
 
     h3 {
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.4rem;
+      font-weight: 700;
       color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
+      text-shadow: ${props => props.$isDark 
+        ? '1px 1px 2px rgba(0, 0, 0, 0.3)' 
+        : '1px 1px 2px rgba(0, 0, 0, 0.1)'
+      };
     }
 
     .descripcion {
       color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
-      margin-bottom: 1rem;
-      line-height: 1.5;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      font-size: 1rem;
     }
 
     .curso-meta {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
 
       .meta-item {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.4rem;
         color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
         font-size: 0.9rem;
+        font-weight: 500;
+        padding: 0.3rem 0.6rem;
+        background: ${props => props.$isDark 
+          ? 'rgba(71, 85, 105, 0.3)' 
+          : 'rgba(248, 250, 252, 0.8)'
+        };
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05);
+          background: ${props => props.$isDark 
+            ? 'rgba(71, 85, 105, 0.5)' 
+            : 'rgba(226, 232, 240, 0.8)'
+          };
+        }
 
         svg {
           flex-shrink: 0;
@@ -496,29 +658,53 @@ const StyledWrapper = styled.div`
 
     .instructor {
       color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: ${props => props.$isDark 
+        ? 'linear-gradient(135deg, rgba(51, 65, 85, 0.5) 0%, rgba(71, 85, 105, 0.3) 100%)'
+        : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.6) 100%)'
+      };
+      border-radius: 12px;
+      border-left: 4px solid var(--color-secondary);
 
       strong {
         color: ${props => props.$isDark ? '#f8fafc' : '#1e293b'};
+        font-weight: 700;
       }
     }
 
     .tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
 
       .tag {
         background: ${props => props.$isDark 
-          ? 'rgba(255, 255, 255, 0.1)'
-          : 'rgba(0, 0, 0, 0.05)'
+          ? 'linear-gradient(135deg, rgba(71, 85, 105, 0.5) 0%, rgba(94, 113, 132, 0.3) 100%)'
+          : 'linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(226, 232, 240, 0.6) 100%)'
         };
         color: ${props => props.$isDark ? '#cbd5e1' : '#475569'};
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
         font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 1px solid ${props => props.$isDark 
+          ? 'rgba(203, 213, 225, 0.1)' 
+          : 'rgba(71, 85, 105, 0.1)'
+        };
+
+        &:hover {
+          transform: translateY(-2px);
+          background: ${props => props.$isDark 
+            ? 'linear-gradient(135deg, rgba(8, 119, 153, 0.3) 0%, rgba(24, 226, 162, 0.2) 100%)'
+            : 'linear-gradient(135deg, rgba(8, 119, 153, 0.1) 0%, rgba(24, 226, 162, 0.1) 100%)'
+          };
+          color: var(--color-profes);
+          box-shadow: 0 4px 12px rgba(8, 119, 153, 0.2);
+        }
       }
     }
 
@@ -528,23 +714,51 @@ const StyledWrapper = styled.div`
       align-items: center;
 
       .precio {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #18e2a2;
+        font-size: 1.3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--color-secondary), var(--color-profes));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .inscribir-btn {
-        background: linear-gradient(135deg, #087799, #076687);
+        background: linear-gradient(135deg, var(--color-profes) 0%, var(--color-secondary) 100%);
         color: white;
         border: none;
-        padding: 0.5rem 1.5rem;
-        border-radius: 6px;
-        font-weight: 500;
+        padding: 0.8rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1rem;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 6px 20px rgba(8, 119, 153, 0.3);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          transition: width 0.6s, height 0.6s;
+          transform: translate(-50%, -50%);
+        }
+
+        &:active::before {
+          width: 300px;
+          height: 300px;
+        }
 
         &:hover {
-          transform: translateY(-1px);
+          transform: translateY(-3px);
+          background: linear-gradient(135deg, #0a8db5 0%, #20f5c7 100%);
+          box-shadow: 0 10px 30px rgba(8, 119, 153, 0.4);
         }
       }
     }
@@ -553,14 +767,43 @@ const StyledWrapper = styled.div`
   .no-results {
     text-align: center;
     padding: 4rem 2rem;
+    background: ${props => props.$isDark 
+      ? 'linear-gradient(135deg, rgba(30, 41, 59, 0.5) 0%, rgba(51, 65, 85, 0.3) 100%)'
+      : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.6) 100%)'
+    };
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid ${props => props.$isDark 
+      ? 'rgba(71, 85, 105, 0.3)' 
+      : 'rgba(226, 232, 240, 0.5)'
+    };
+    max-width: 600px;
+    margin: 2rem auto;
+
+    svg {
+      margin-bottom: 1.5rem;
+      opacity: 0.6;
+    }
 
     h3 {
       color: ${props => props.$isDark ? '#94a3b8' : '#64748b'};
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
     }
 
     p {
       color: ${props => props.$isDark ? '#64748b' : '#94a3b8'};
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+  }
+
+  /* Enhanced Responsive Design */
+  @media (max-width: 1200px) {
+    .cursos-grid {
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
     }
   }
 
@@ -572,14 +815,45 @@ const StyledWrapper = styled.div`
     .filters-section {
       flex-direction: column;
       align-items: stretch;
+      padding: 1.2rem;
+    }
+
+    .search-bar {
+      max-width: none !important;
     }
 
     .cursos-grid {
       grid-template-columns: 1fr;
     }
 
-    .header h1 {
-      font-size: 2rem;
+    .curso-content {
+      padding: 1.5rem;
+    }
+
+    .curso-image {
+      height: 160px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .oferta-container {
+      padding: 0.5rem;
+    }
+
+    .filters-section {
+      padding: 1rem;
+    }
+
+    .curso-content {
+      padding: 1.2rem;
+    }
+
+    .curso-meta {
+      gap: 0.8rem;
+    }
+
+    .tags {
+      gap: 0.4rem;
     }
   }
 `;

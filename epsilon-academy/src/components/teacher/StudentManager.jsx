@@ -19,10 +19,9 @@ import {
   UserMinus
 } from 'lucide-react';
 
-const StudentManager = ({ onCreateStudent, onEditStudent, onViewStudent, onManageGroups }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterGroup, setFilterGroup] = useState('all');
+const StudentManager = ({ viewMode = 'cards', filters = {}, onCreateStudent, onEditStudent, onViewStudent, onManageGroups }) => {
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   // Datos de ejemplo de estudiantes
   const students = [
@@ -96,10 +95,14 @@ const StudentManager = ({ onCreateStudent, onEditStudent, onViewStudent, onManag
   ];
 
   const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || student.status === filterStatus;
-    const matchesGroup = filterGroup === 'all' || student.groups.some(group => group === filterGroup);
+    const searchText = filters.search || '';
+    const statusFilter = filters.status || 'all';
+    const groupFilter = filters.group || 'all';
+    
+    const matchesSearch = student.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                         student.email.toLowerCase().includes(searchText.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
+    const matchesGroup = groupFilter === 'all' || student.groups.some(group => group === groupFilter);
     
     return matchesSearch && matchesStatus && matchesGroup;
   });
@@ -122,126 +125,27 @@ const StudentManager = ({ onCreateStudent, onEditStudent, onViewStudent, onManag
     }
   };
 
-  const stats = {
-    total: students.length,
-    active: students.filter(s => s.status === 'active').length,
-    inactive: students.filter(s => s.status === 'inactive').length,
-    pending: students.filter(s => s.status === 'pending').length
-  };
-
   return (
     <StyledWrapper>
       <div className="student-manager">
-        {/* Header */}
-        <div className="manager-header">
-          <div className="header-left">
-            <h2>Gestión de Estudiantes</h2>
-            <p>Administra estudiantes, grupos y permisos</p>
-          </div>
-          <div className="header-actions">
-            <button className="create-group-btn" onClick={onManageGroups}>
-              <Users size={20} />
-              Gestionar Grupos
-            </button>
-            <button className="create-student-btn" onClick={onCreateStudent}>
-              <Plus size={20} />
-              Nuevo Estudiante
-            </button>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon total">
-              <Users size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{stats.total}</div>
-              <div className="stat-label">Total Estudiantes</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon active">
-              <UserPlus size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{stats.active}</div>
-              <div className="stat-label">Activos</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon inactive">
-              <UserMinus size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{stats.inactive}</div>
-              <div className="stat-label">Inactivos</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon pending">
-              <Calendar size={24} />
-            </div>
-            <div className="stat-content">
-              <div className="stat-number">{stats.pending}</div>
-              <div className="stat-label">Pendientes</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters and Search */}
-        <div className="filters-section">
-          <div className="search-box">
-            <Search size={20} />
-            <input
-              type="text"
-              placeholder="Buscar estudiantes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          
-          <div className="filters">
-            <select 
-              value={filterStatus} 
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="filter-select"
-            >
-              <option value="all">Todos los estados</option>
-              <option value="active">Activos</option>
-              <option value="inactive">Inactivos</option>
-              <option value="pending">Pendientes</option>
-            </select>
-
-            <select 
-              value={filterGroup} 
-              onChange={(e) => setFilterGroup(e.target.value)}
-              className="filter-select"
-            >
-              <option value="all">Todos los grupos</option>
-              {groups.map(group => (
-                <option key={group.id} value={group.name}>{group.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Students Grid */}
-        <div className="students-grid">
-          {filteredStudents.map(student => (
-            <div key={student.id} className="student-card">
-              <div className="student-header">
-                <div className="student-avatar">
-                  <User size={24} color="white" />
-                  <div 
-                    className="status-indicator" 
-                    style={{ backgroundColor: getStatusColor(student.status) }}
-                  ></div>
-                </div>
-                <div className="student-info">
-                  <h4>{student.name}</h4>
-                  <p className="student-email">{student.email}</p>
+        {/* Students Display */}
+        <div className={`students-container ${viewMode}`}>
+          {viewMode === 'cards' ? (
+            // Vista de Tarjetas
+            <div className="students-grid">
+              {filteredStudents.map(student => (
+                <div key={student.id} className="student-card">
+                  <div className="student-header">
+                    <div className="student-avatar">
+                      <User size={24} color="white" />
+                      <div 
+                        className="status-indicator" 
+                        style={{ backgroundColor: getStatusColor(student.status) }}
+                      ></div>
+                    </div>
+                    <div className="student-info">
+                      <h4>{student.name}</h4>
+                      <p className="student-email">{student.email}</p>
                   <span 
                     className="status-badge"
                     style={{ backgroundColor: getStatusColor(student.status) }}
@@ -309,12 +213,6 @@ const StudentManager = ({ onCreateStudent, onEditStudent, onViewStudent, onManag
                   <BookOpen size={16} />
                 </button>
                 <button 
-                  className="btn-groups"
-                  title="Gestionar grupos"
-                >
-                  <Users size={16} />
-                </button>
-                <button 
                   className="btn-delete"
                   title="Eliminar estudiante"
                 >
@@ -324,18 +222,101 @@ const StudentManager = ({ onCreateStudent, onEditStudent, onViewStudent, onManag
             </div>
           ))}
         </div>
+          ) : (
+            // Vista de Lista
+            <div className="students-list">
+              <div className="list-header">
+                <div className="col-student">Estudiante</div>
+                <div className="col-email">Email</div>
+                <div className="col-courses">Cursos</div>
+                <div className="col-progress">Progreso</div>
+                <div className="col-gpa">GPA</div>
+                <div className="col-status">Estado</div>
+                <div className="col-actions">Acciones</div>
+              </div>
+              {filteredStudents.map(student => (
+                <div key={student.id} className={`list-row ${student.status}`}>
+                  <div className="col-student">
+                    <div className="student-info-compact">
+                      <div className="student-avatar small">
+                        <User size={16} color="white" />
+                        <div 
+                          className="status-indicator small" 
+                          style={{ backgroundColor: getStatusColor(student.status) }}
+                        ></div>
+                      </div>
+                      <div>
+                        <h4>{student.name}</h4>
+                        <span className="join-date">
+                          {new Date(student.joinDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-email">{student.email}</div>
+                  <div className="col-courses">
+                    <div className="courses-info">
+                      <BookOpen size={14} />
+                      <span>{student.enrolledCourses}</span>
+                    </div>
+                  </div>
+                  <div className="col-progress">
+                    <div className="progress-compact">
+                      <div className="progress-bar small">
+                        <div 
+                          className="progress-fill"
+                          style={{ width: `${student.progress}%` }}
+                        />
+                      </div>
+                      <span className="progress-text">{student.progress}%</span>
+                    </div>
+                  </div>
+                  <div className="col-gpa">
+                    <span className="gpa-badge">{student.gpa}</span>
+                  </div>
+                  <div className="col-status">
+                    <span 
+                      className="status-badge compact"
+                      style={{ backgroundColor: getStatusColor(student.status) }}
+                    >
+                      {getStatusText(student.status)}
+                    </span>
+                  </div>
+                  <div className="col-actions">
+                    <div className="action-buttons">
+                      <button 
+                        className="action-btn view"
+                        onClick={() => onViewStudent && onViewStudent(student)}
+                        title="Ver detalles"
+                      >
+                        <Eye size={16} />
+                      </button>
+                      <button 
+                        className="action-btn edit"
+                        onClick={() => onEditStudent && onEditStudent(student)}
+                        title="Editar"
+                      >
+                        <Edit3 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {filteredStudents.length === 0 && (
           <div className="empty-state">
             <div className="empty-icon">👥</div>
             <h3>No se encontraron estudiantes</h3>
             <p>
-              {searchTerm || filterStatus !== 'all' || filterGroup !== 'all'
+              {filters.search || filters.status !== 'all' || filters.group !== 'all'
                 ? 'Intenta cambiar los filtros de búsqueda'
                 : 'Comienza agregando tu primer estudiante'
               }
             </p>
-            {!searchTerm && filterStatus === 'all' && filterGroup === 'all' && (
+            {!filters.search && filters.status === 'all' && filters.group === 'all' && (
               <button className="create-first-student" onClick={onCreateStudent}>
                 <Plus size={20} />
                 Agregar primer estudiante
@@ -351,111 +332,6 @@ const StudentManager = ({ onCreateStudent, onEditStudent, onViewStudent, onManag
 const StyledWrapper = styled.div`
   .student-manager {
     padding: 0;
-  }
-
-  .manager-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-  }
-
-  .header-left h2 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-  }
-
-  .header-left p {
-    color: #64748b;
-    margin: 0;
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .create-student-btn, .create-group-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .create-student-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-  }
-
-  .create-group-btn {
-    background: #f8fafc;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-  }
-
-  .create-student-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-  }
-
-  .create-group-btn:hover {
-    background: #e2e8f0;
-  }
-
-  /* Stats Grid */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .stat-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-
-  .stat-icon.total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-  .stat-icon.active { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-  .stat-icon.inactive { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-  .stat-icon.pending { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-
-  .stat-content {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .stat-number {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #2c3e50;
-  }
-
-  .stat-label {
-    color: #64748b;
-    font-size: 0.9rem;
   }
 
   /* Filters */
@@ -518,11 +394,13 @@ const StyledWrapper = styled.div`
   }
 
   /* Students Grid */
-  .students-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
+  .student-manager .students-container.cards .students-grid {
+    display: grid !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
   }
+
+  
 
   .student-card {
     background: white;
@@ -697,15 +575,6 @@ const StyledWrapper = styled.div`
     background: #a7f3d0;
   }
 
-  .btn-groups {
-    background: #fef3c7;
-    color: #f59e0b;
-  }
-
-  .btn-groups:hover {
-    background: #fde68a;
-  }
-
   .btn-delete {
     background: #fee2e2;
     color: #ef4444;
@@ -760,20 +629,6 @@ const StyledWrapper = styled.div`
 
   /* Responsive */
   @media (max-width: 768px) {
-    .manager-header {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .header-actions {
-      justify-content: stretch;
-    }
-
-    .header-actions button {
-      flex: 1;
-    }
-
     .filters-section {
       flex-direction: column;
     }
@@ -792,6 +647,159 @@ const StyledWrapper = styled.div`
 
     .student-actions {
       justify-content: center;
+    }
+  }
+
+  /* Vista de Lista */
+  .students-container.list .students-list {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .list-header {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+  }
+
+  .list-row {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: center;
+    transition: background 0.2s ease;
+  }
+
+  .list-row:hover {
+    background: #f8fafc;
+  }
+
+  .list-row:last-child {
+    border-bottom: none;
+  }
+
+  .student-info-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .student-avatar.small {
+    width: 40px;
+    height: 40px;
+  }
+
+  .student-info-compact h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    color: #2c3e50;
+  }
+
+  .student-info-compact .join-date {
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  .status-indicator.small {
+    width: 8px;
+    height: 8px;
+  }
+
+  .courses-info {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #64748b;
+  }
+
+  .progress-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-bar.small {
+    height: 6px;
+    flex: 1;
+    min-width: 60px;
+  }
+
+  .progress-text {
+    font-size: 0.8rem;
+    color: #64748b;
+    min-width: 35px;
+  }
+
+  .gpa-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .status-badge.compact {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .action-btn {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action-btn:hover {
+    background: #f1f5f9;
+  }
+
+  .action-btn.view { color: #3b82f6; }
+  .action-btn.edit { color: #f59e0b; }
+
+  /* Responsive para vista de lista */
+  @media (max-width: 768px) {
+    .list-header,
+    .list-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .list-header {
+      display: none;
+    }
+
+    .list-row {
+      display: block;
+      padding: 1rem;
+    }
+
+    .student-manager .students-container.cards .students-grid {
+      grid-template-columns: 1fr !important;
     }
   }
 `;
