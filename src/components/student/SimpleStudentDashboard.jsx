@@ -66,7 +66,7 @@ const SimpleStudentDashboard = () => {
       <div className="dashboard-container">
         <header className="dashboard-header">
           <div className="logo-section">
-            <h1 style={{color: 'white'}}>EPSILON ACADEMY</h1>
+            <h1 style={{color: 'white'}}>EPSILON AKDEMY</h1>
             <span className="perfil-badge">PERFIL</span>
           </div>
           

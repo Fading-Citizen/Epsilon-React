@@ -242,7 +242,7 @@ const AdminPanel = () => {
           <div className="header-left">
             <img 
               src="/assets/images/LogotipoGrisOscuro.png" 
-              alt="Epsilon Academy" 
+              alt="Epsilon Akdemy" 
               className="header-logo"
               onError={(e) => {
                 console.log('Error loading header logo from:', e.target.src);
@@ -255,7 +255,7 @@ const AdminPanel = () => {
                   e.target.style.display = 'none';
                   // Mostrar texto como fallback
                   const fallback = document.createElement('span');
-                  fallback.textContent = 'EPSILON ACADEMY';
+                  fallback.textContent = 'EPSILON AKDEMY';
                   fallback.className = 'logo-fallback';
                   e.target.parentElement.insertBefore(fallback, e.target);
                 }

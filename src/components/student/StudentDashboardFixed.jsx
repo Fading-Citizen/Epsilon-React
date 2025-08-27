@@ -11,7 +11,7 @@ const StudentDashboardFixed = () => {
       <div className="dashboard-wrapper">
         <header className="main-header">
           <div className="logo">
-            <h1>EPSILON ACADEMY</h1>
+            <h1>EPSILON AKDEMY</h1>
             <span className="badge">PERFIL</span>
           </div>
           

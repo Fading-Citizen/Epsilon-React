@@ -241,7 +241,7 @@ const TeacherDashboard = () => {
                   ? getAssetPath("/assets/images/LogotipoBlanco.png") 
                   : getAssetPath("/assets/images/LogotipoGrisOscuro.png")
                 } 
-                alt="Epsilon Academy" 
+                alt="Epsilon Akdemy" 
                 className="logo-image"
               />
             </div>

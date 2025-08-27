@@ -36,13 +36,13 @@ const Login = () => {
           <div className="logo-section">
             <img 
               src="/assets/images/LogotipoBlanco.png" 
-              alt="Epsilon Academy" 
+              alt="Epsilon Akdemy" 
               className="logo-image"
               onError={(e) => {
                 console.log('Error loading login logo');
                 e.target.style.display = 'none';
                 const fallback = document.createElement('div');
-                fallback.innerHTML = '<div class="logo">epsilon</div><div class="academy">ACADEMY</div>';
+                fallback.innerHTML = '<div class="logo">epsilon</div><div class="academy">AKDEMY</div>';
                 fallback.className = 'logo-fallback';
                 e.target.parentElement.insertBefore(fallback, e.target);
               }}

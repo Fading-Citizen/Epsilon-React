@@ -160,7 +160,7 @@ const StudentDashboard = () => {
           <div className="logo-section">
             <img 
               src={isDarkMode ? getAssetPath("/assets/images/LogotipoBlanco.png") : getAssetPath("/assets/images/LogotipoGrisOscuro.png")}
-              alt="Epsilon Academy" 
+              alt="Epsilon Akdemy" 
               className="logo-image"
               style={{ transition: 'opacity 0.3s ease' }}
               onError={(e) => {
@@ -171,7 +171,7 @@ const StudentDashboard = () => {
                 }
                 e.target.style.display = 'none';
                 const fallback = document.createElement('div');
-                fallback.innerHTML = '<span class="logo">epsilon</span><span class="academy">ACADEMY</span>';
+                fallback.innerHTML = '<span class="logo">epsilon</span><span class="academy">AKDEMY</span>';
                 fallback.className = 'logo-fallback';
                 e.target.parentElement.insertBefore(fallback, e.target);
               }}
