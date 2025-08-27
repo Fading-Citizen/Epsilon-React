@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epsilon Academy - Redirecting...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        .message {
+            margin-bottom: 1rem;
+        }
+        .redirect-link {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        // Redirect to the actual application
+        setTimeout(() => {
+            window.location.href = './epsilon-academy/index.html';
+        }, 2000);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">ε EPSILON ACADEMY</div>
+        <div class="message">
+            Redirecting to the application...
+            <span class="spinner">⟳</span>
+        </div>
+        <p>If you're not redirected automatically, 
+        <a href="./epsilon-academy/index.html" class="redirect-link">click here</a></p>
+        <small>Educational Platform Preview</small>
+    </div>
+</body>
+</html>

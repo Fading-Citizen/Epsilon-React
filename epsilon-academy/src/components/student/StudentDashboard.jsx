@@ -7,6 +7,7 @@ import OfertaAcademica from './OfertaAcademica';
 import MisCursos from './MisCursos';
 import Simulacros from './Simulacros';
 import StudentProfile from './StudentProfile';
+import { getAssetPath } from '../../utils/paths';
 
 const StudentDashboard = () => {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -158,14 +159,14 @@ const StudentDashboard = () => {
         <header className="header">
           <div className="logo-section">
             <img 
-              src={isDarkMode ? "/assets/images/LogotipoBlanco.png" : "/assets/images/LogotipoGrisOscuro.png"}
+              src={isDarkMode ? getAssetPath("/assets/images/LogotipoBlanco.png") : getAssetPath("/assets/images/LogotipoGrisOscuro.png")}
               alt="Epsilon Academy" 
               className="logo-image"
               style={{ transition: 'opacity 0.3s ease' }}
               onError={(e) => {
                 // Si LogotipoGrisOscuro no existe, intentar con otra opción
                 if (!isDarkMode && e.target.src.includes('LogotipoGrisOscuro')) {
-                  e.target.src = "/assets/images/IsotipoNegro.png";
+                  e.target.src = getAssetPath("/assets/images/IsotipoNegro.png");
                   return;
                 }
                 e.target.style.display = 'none';
