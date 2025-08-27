@@ -8,7 +8,6 @@ import StudentForm from './StudentForm';
 import GroupManager from './GroupManager';
 import EvaluationsManager from './EvaluationsManager_New';
 import QuizBuilder from './QuizBuilder';
-import { getAssetPath } from '../../utils/paths';
 import { 
   User, 
   BookOpen, 
@@ -238,8 +237,8 @@ const TeacherDashboard = () => {
             <div className="logo-section">
               <img 
                 src={isDarkMode 
-                  ? getAssetPath("/assets/images/LogotipoBlanco.png") 
-                  : getAssetPath("/assets/images/LogotipoGrisOscuro.png")
+                  ? `${import.meta.env.BASE_URL}assets/images/LogotipoBlanco.png` 
+                  : `${import.meta.env.BASE_URL}assets/images/LogotipoGrisOscuro.png`
                 } 
                 alt="Epsilon Akdemy" 
                 className="logo-image"

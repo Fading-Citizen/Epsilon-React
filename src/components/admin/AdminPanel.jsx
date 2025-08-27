@@ -241,27 +241,9 @@ const AdminPanel = () => {
         <div className="top-bar">
           <div className="header-left">
             <img 
-              src="/assets/images/LogotipoGrisOscuro.png" 
+              src={`${import.meta.env.BASE_URL}assets/images/LogotipoGrisOscuro.png`} 
               alt="Epsilon Akdemy" 
               className="header-logo"
-              onError={(e) => {
-                console.log('Error loading header logo from:', e.target.src);
-                // Intentar con logos alternativos
-                if (e.target.src.includes('LogotipoGrisOscuro')) {
-                  e.target.src = '/assets/images/LogotipoBlanco.png';
-                } else if (e.target.src.includes('LogotipoBlanco')) {
-                  e.target.src = '/assets/images/LogotipoEpsilonAkdemyBlancoYGris.png';
-                } else {
-                  e.target.style.display = 'none';
-                  // Mostrar texto como fallback
-                  const fallback = document.createElement('span');
-                  fallback.textContent = 'EPSILON AKDEMY';
-                  fallback.className = 'logo-fallback';
-                  e.target.parentElement.insertBefore(fallback, e.target);
-                }
-              }}
-              onLoad={() => console.log('Header logo loaded successfully')}
-              style={{ display: 'block' }}
             />
             <h2>{getPageTitle()}</h2>
           </div>

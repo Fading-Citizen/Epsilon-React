@@ -44,7 +44,7 @@ const Login = () => {
         width: '100%',
         maxWidth: '400px'
       }}>
-        <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>Epsilon Academy</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>Epsilon Akademy</h1>
         <form onSubmit={handleLogin}>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem' }}>Usuario/Email:</label>
