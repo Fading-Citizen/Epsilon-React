@@ -198,8 +198,8 @@ const StudentDashboard = () => {
               onClick={() => navegarA('perfil')}
               style={{ cursor: 'pointer' }}
             >
-              <div className="user-name">Demo Student</div>
-              <div className="user-email">demo@epsilonacademy.com</div>
+              <div className="user-name">Estudiante</div>
+              <div className="user-email">estudiante@epsilonacademy.com</div>
               <div className="edit-profile">Ver mi perfil</div>
             </div>
             <div 

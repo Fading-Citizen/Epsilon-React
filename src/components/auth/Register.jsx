@@ -13,7 +13,6 @@ const Register = () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log('Register:', { firstName, lastName, email, gender, age });
     alert('Registro exitoso');
   };
 

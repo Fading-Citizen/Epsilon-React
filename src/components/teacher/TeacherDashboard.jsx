@@ -6,7 +6,7 @@ import StudentManager from './StudentManager';
 import StudentDetail from './StudentDetail';
 import StudentForm from './StudentForm';
 import GroupManager from './GroupManager';
-import EvaluationsManager from './EvaluationsManager_New';
+import EvaluationsManager from './EvaluationsManager';
 import QuizBuilder from './QuizBuilder';
 import { 
   User, 
@@ -98,13 +98,11 @@ const TeacherDashboard = () => {
   const handleCreateQuiz = () => {
     setEditingEvaluation(null);
     setShowQuizBuilder(true);
-    console.log('Creando nuevo quiz');
   };
 
   const handleCreateSimulacro = () => {
     setEditingEvaluation(null);
     setShowSimulacroBuilder(true);
-    console.log('Creando nuevo simulacro');
   };
 
   // Componente para el header de sección con filtros
@@ -249,7 +247,7 @@ const TeacherDashboard = () => {
                 <User size={20} color="white" />
               </div>
               <div className="profile-info">
-                <span className="profile-name">Prof. Demo</span>
+                <span className="profile-name">Profesor</span>
                 <span className="profile-role">Matemáticas</span>
               </div>
             </div>
@@ -539,7 +537,6 @@ const TeacherDashboard = () => {
                   setEditingStudent(null);
                 }}
                 onSave={(studentData) => {
-                  console.log('Saving student:', studentData);
                   setShowStudentForm(false);
                   setEditingStudent(null);
                 }}
@@ -614,7 +611,6 @@ const TeacherDashboard = () => {
                 type="quiz"
                 quiz={editingEvaluation}
                 onSave={(quizData) => {
-                  console.log('Quiz guardado:', quizData);
                   setShowQuizBuilder(false);
                   setEditingEvaluation(null);
                 }}
@@ -631,7 +627,6 @@ const TeacherDashboard = () => {
                 type="simulacro"
                 quiz={editingEvaluation ? { ...editingEvaluation, isIndependent: true } : { isIndependent: true }}
                 onSave={(simulacroData) => {
-                  console.log('Simulacro guardado:', simulacroData);
                   setShowSimulacroBuilder(false);
                   setEditingEvaluation(null);
                 }}
