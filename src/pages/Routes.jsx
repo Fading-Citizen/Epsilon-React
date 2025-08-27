@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import AdminPanel from '../components/admin/AdminPanel';
@@ -8,7 +8,7 @@ import TeacherDashboard from '../components/teacher/TeacherDashboard';
 
 const AppRoutes = () => {
   return (
-    <Router basename="/Epsilon-React">
+    <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
