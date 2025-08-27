@@ -241,7 +241,7 @@ const AdminPanel = () => {
         <div className="top-bar">
           <div className="header-left">
             <img 
-              src={`${import.meta.env.BASE_URL}assets/images/LogotipoGrisOscuro.png`} 
+              src="/assets/images/LogotipoGrisOscuro.png" 
               alt="Epsilon Akdemy" 
               className="header-logo"
             />

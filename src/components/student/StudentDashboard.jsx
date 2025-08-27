@@ -158,7 +158,7 @@ const StudentDashboard = () => {
         <header className="header">
           <div className="logo-section">
             <img 
-              src={isDarkMode ? `${import.meta.env.BASE_URL}assets/images/LogotipoBlanco.png` : `${import.meta.env.BASE_URL}assets/images/LogotipoGrisOscuro.png`}
+              src={isDarkMode ? "/assets/images/LogotipoBlanco.png" : "/assets/images/LogotipoGrisOscuro.png"}
               alt="Epsilon Akdemy" 
               className="logo-image"
               style={{ transition: 'opacity 0.3s ease' }}

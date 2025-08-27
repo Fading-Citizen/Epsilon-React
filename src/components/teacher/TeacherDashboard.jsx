@@ -237,8 +237,8 @@ const TeacherDashboard = () => {
             <div className="logo-section">
               <img 
                 src={isDarkMode 
-                  ? `${import.meta.env.BASE_URL}assets/images/LogotipoBlanco.png` 
-                  : `${import.meta.env.BASE_URL}assets/images/LogotipoGrisOscuro.png`
+                  ? "/assets/images/LogotipoBlanco.png" 
+                  : "/assets/images/LogotipoGrisOscuro.png"
                 } 
                 alt="Epsilon Akdemy" 
                 className="logo-image"

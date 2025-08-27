@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import AdminPanel from '../components/admin/AdminPanel';
@@ -16,7 +16,6 @@ const AppRoutes = () => {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/student" element={<StudentDashboard />} />
         <Route path="/teacher" element={<TeacherDashboard />} />
-        {/* Catch all route for unmatched paths */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
