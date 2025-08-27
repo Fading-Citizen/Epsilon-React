@@ -32,11 +32,12 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
     randomizeQuestions: type === 'simulacro' ? true : false,
     showCorrectAnswers: type === 'simulacro' ? false : true,
     allowRetake: type === 'simulacro' ? false : true,
-    isIndependent: type === 'simulacro' ? true : false,
+    isIndependent: type === 'simulacro' ? true : false, // Simulacros SÍ son independientes
     courseId: type === 'simulacro' ? 0 : '',
-    course: type === 'simulacro' ? 'Acceso Libre' : '',
+    course: type === 'simulacro' ? 'Independiente' : '',
     dueDate: '',
     assignedTo: [], // IDs de estudiantes/grupos
+    assignedGroups: [], // IDs de grupos asignados (específico para simulacros)
     status: 'draft' // 'draft', 'published', 'archived'
   });
 
@@ -81,11 +82,12 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
         randomizeQuestions: quiz.randomizeQuestions !== undefined ? quiz.randomizeQuestions : (type === 'simulacro'),
         showCorrectAnswers: quiz.showCorrectAnswers !== undefined ? quiz.showCorrectAnswers : (type !== 'simulacro'),
         allowRetake: quiz.allowRetake !== undefined ? quiz.allowRetake : (type !== 'simulacro'),
-        isIndependent: quiz.isIndependent !== undefined ? quiz.isIndependent : (type === 'simulacro'),
+        isIndependent: quiz.isIndependent !== undefined ? quiz.isIndependent : (type === 'simulacro'), // Simulacros SÍ son independientes
         courseId: quiz.courseId !== undefined ? quiz.courseId : (type === 'simulacro' ? 0 : ''),
-        course: quiz.course || (type === 'simulacro' ? 'Acceso Libre' : ''),
+        course: quiz.course || (type === 'simulacro' ? 'Independiente' : ''),
         dueDate: quiz.dueDate || '',
         assignedTo: quiz.assignedTo || [],
+        assignedGroups: quiz.assignedGroups || [], // Grupos asignados para simulacros
         status: quiz.status || 'draft'
       });
       // Cargar preguntas si existen y son un array
@@ -159,8 +161,8 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
     setQuizData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // Si cambió el curso, actualizar el estado independiente
-      if (field === 'courseId') {
+      // Si cambió el curso, actualizar el estado independiente (solo para quiz y exams, no simulacros)
+      if (field === 'courseId' && prev.type !== 'simulacro') {
         const courseId = value === '' ? null : parseInt(value);
         const course = availableCourses.find(c => c.id === courseId);
         const isIndependent = courseId === 0 || courseId === null;
@@ -171,6 +173,13 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
         if (isIndependent) {
           newData.dueDate = '';
         }
+      }
+      
+      // Los simulacros siempre mantienen su estado independiente
+      if (prev.type === 'simulacro') {
+        newData.isIndependent = true;
+        newData.course = 'Independiente';
+        newData.courseId = 0;
       }
       
       return newData;
@@ -246,10 +255,10 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
       return;
     }
 
-    if (!quizData.isIndependent && !quizData.courseId) {
-      alert(quizData.type === 'simulacro' 
-        ? 'Los simulacros son evaluaciones independientes'
-        : 'Debe seleccionar un curso o marcar como acceso libre');
+    // Los simulacros son independientes y no requieren validación de grupos (opcional)
+    // Solo los quiz y exams requieren validación de curso
+    if (!quizData.isIndependent && !quizData.courseId && quizData.type !== 'simulacro') {
+      alert('Debe seleccionar un curso o marcar como acceso libre');
       return;
     }
 
@@ -534,29 +543,39 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
                 <h3>Configuración Básica</h3>
                 
                 <div className="form-row">
-                  <div className="form-group">
-                    <label>Curso</label>
-                    <select 
-                      value={quizData.courseId || ''}
-                      onChange={(e) => handleQuizChange('courseId', e.target.value)}
-                      disabled={quizData.type === 'simulacro'}
-                    >
-                      <option value="">Seleccionar curso</option>
-                      {availableCourses.map(course => (
-                        <option key={course.id} value={course.id}>
-                          {course.title}
-                        </option>
-                      ))}
-                    </select>
-                    {quizData.isIndependent && (
-                      <small className="independent-note">
-                        {quizData.type === 'simulacro' 
-                          ? 'Los simulacros son evaluaciones independientes disponibles para todos los estudiantes'
-                          : 'Esta evaluación será de acceso libre para todos los estudiantes'
-                        }
-                      </small>
-                    )}
-                  </div>
+                  {quizData.type !== 'simulacro' && (
+                    <div className="form-group">
+                      <label>Curso</label>
+                      <select 
+                        value={quizData.courseId || ''}
+                        onChange={(e) => handleQuizChange('courseId', e.target.value)}
+                      >
+                        <option value="">Seleccionar curso</option>
+                        {availableCourses.map(course => (
+                          <option key={course.id} value={course.id}>
+                            {course.title}
+                          </option>
+                        ))}
+                      </select>
+                      {quizData.isIndependent && (
+                        <small className="independent-note">
+                          Esta evaluación será de acceso libre para todos los estudiantes
+                        </small>
+                      )}
+                    </div>
+                  )}
+                  
+                  {quizData.type === 'simulacro' && (
+                    <div className="form-group">
+                      <label>Tipo de Evaluación</label>
+                      <div className="simulacro-info">
+                        <p><strong>🎯 Simulacro Independiente</strong></p>
+                        <small className="independent-note">
+                          Los simulacros son evaluaciones independientes. Los estudiantes pueden pagarlos por separado para practicar.
+                        </small>
+                      </div>
+                    </div>
+                  )}
                   
                   {!quizData.isIndependent && (
                     <div className="form-group">
@@ -571,6 +590,27 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
                   )}
                 </div>
               </div>
+
+              {/* Información de grupos asignados para simulacros */}
+              {quizData.type === 'simulacro' && quizData.assignedGroups && quizData.assignedGroups.length > 0 && (
+                <div className="settings-section">
+                  <h3>Grupos Asignados</h3>
+                  <div className="assigned-groups-info">
+                    {quizData.assignedGroups.map(groupId => {
+                      const group = availableGroups.find(g => g.id === groupId);
+                      return group ? (
+                        <div key={group.id} className="assigned-group-item">
+                          <div className="group-name">{group.name}</div>
+                          <div className="group-students">{group.students} estudiantes</div>
+                        </div>
+                      ) : null;
+                    })}
+                  </div>
+                  <small className="groups-note">
+                    Para cambiar la asignación de grupos, usa la pestaña "Asignación"
+                  </small>
+                </div>
+              )}
 
               <div className="settings-section">
                 <h3>Configuración de Evaluación</h3>
@@ -633,71 +673,161 @@ const QuizBuilder = ({ type, quiz, onSave, onCancel }) => {
               {quizData.isIndependent ? (
                 <div className="independent-access">
                   <div className="access-info">
-                    <h3>Acceso Libre</h3>
-                    <p>Esta evaluación está configurada como de acceso libre.</p>
-                    <div className="access-details">
-                      <div className="detail-item">
-                        <strong>Acceso:</strong> Todos los estudiantes podrán acceder
+                    {quizData.type === 'simulacro' ? (
+                      <div>
+                        <h3>🎯 Simulacro Independiente</h3>
+                        <p>Este simulacro es una evaluación independiente que no está vinculada a ningún curso específico.</p>
+                        
+                        <div className="simulacro-options">
+                          <div className="access-option">
+                            <h4>Opción 1: Acceso Libre</h4>
+                            <p>Cualquier estudiante puede acceder y pagar por este simulacro.</p>
+                          </div>
+                          
+                          <div className="access-option">
+                            <h4>Opción 2: Asignación Específica</h4>
+                            <p>Asignar el simulacro a grupos o estudiantes específicos.</p>
+                            <button 
+                              className="assign-btn"
+                              onClick={() => {
+                                // Toggle entre acceso libre y asignación específica
+                                handleQuizChange('isIndependent', false);
+                              }}
+                            >
+                              Configurar Asignaciones Específicas
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {(quizData.assignedGroups?.length > 0 || quizData.assignedTo?.length > 0) && (
+                          <div className="assignment-summary">
+                            <h4>✅ Asignaciones Configuradas</h4>
+                            {quizData.assignedGroups?.length > 0 && (
+                              <p>Grupos asignados: {quizData.assignedGroups.length}</p>
+                            )}
+                            {quizData.assignedTo?.length > 0 && (
+                              <p>Estudiantes asignados: {quizData.assignedTo.length}</p>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <div className="detail-item">
-                        <strong>Disponibilidad:</strong> Permanente (sin fecha límite)
+                    ) : (
+                      <div>
+                        <h3>Acceso Libre</h3>
+                        <p>Esta evaluación está configurada como de acceso libre.</p>
+                        <div className="access-details">
+                          <div className="detail-item">
+                            <strong>Acceso:</strong> Todos los estudiantes podrán acceder
+                          </div>
+                          <div className="detail-item">
+                            <strong>Disponibilidad:</strong> Permanente (sin fecha límite)
+                          </div>
+                          <div className="detail-item">
+                            <strong>Visibilidad:</strong> Pública en la plataforma
+                          </div>
+                        </div>
                       </div>
-                      <div className="detail-item">
-                        <strong>Visibilidad:</strong> Pública en la plataforma
-                      </div>
-                    </div>
+                    )}
+                    
                     <div className="access-note">
-                      <p><strong>Nota:</strong> Para restringir el acceso a estudiantes específicos, cambia la configuración en la pestaña "Configuración" y selecciona un curso específico.</p>
+                      <p><strong>Nota:</strong> {quizData.type === 'simulacro' 
+                        ? 'Los simulacros independientes pueden tener acceso libre o asignaciones específicas.'
+                        : 'Para restringir el acceso a estudiantes específicos, cambia la configuración en la pestaña "Configuración" y selecciona un curso específico.'
+                      }</p>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="assign-section">
-                  <h3>Asignar a Estudiantes</h3>
-                  
-                  <div className="assign-options">
-                    <div className="students-section">
-                      <h4>Estudiantes Individuales</h4>
-                      <div className="students-list">
-                        {availableStudents.map(student => (
-                          <label key={student.id} className="student-item">
-                            <input
-                              type="checkbox"
-                              checked={quizData.assignedTo.includes(student.id)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  handleQuizChange('assignedTo', [...quizData.assignedTo, student.id]);
-                                } else {
-                                  handleQuizChange('assignedTo', quizData.assignedTo.filter(id => id !== student.id));
-                                }
-                              }}
-                            />
-                            <div className="student-info">
-                              <span className="student-name">{student.name}</span>
-                              <span className="student-email">{student.email}</span>
+                  {quizData.type === 'simulacro' ? (
+                    <div>
+                      <h3>Asignar Simulacro a Grupos</h3>
+                      <p className="assignment-note">
+                        <strong>Los simulacros deben ser asignados a grupos específicos de estudiantes.</strong>
+                      </p>
+                      
+                      <div className="groups-section">
+                        <h4>Seleccionar Grupos</h4>
+                        <div className="groups-list">
+                          {availableGroups.map(group => (
+                            <div key={group.id} className="group-item">
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  checked={quizData.assignedGroups.includes(group.id)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      handleQuizChange('assignedGroups', [...quizData.assignedGroups, group.id]);
+                                    } else {
+                                      handleQuizChange('assignedGroups', quizData.assignedGroups.filter(id => id !== group.id));
+                                    }
+                                  }}
+                                />
+                                <div className="group-info">
+                                  <span className="group-name">{group.name}</span>
+                                  <span className="group-students">{group.students} estudiantes</span>
+                                </div>
+                              </label>
                             </div>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="groups-section">
-                      <h4>Grupos</h4>
-                      <div className="groups-list">
-                        {availableGroups.map(group => (
-                          <div key={group.id} className="group-item">
-                            <label>
-                              <input type="checkbox" />
-                              <div className="group-info">
-                                <span className="group-name">{group.name}</span>
-                                <span className="group-students">{group.students} estudiantes</span>
-                              </div>
-                            </label>
+                          ))}
+                        </div>
+                        
+                        {quizData.assignedGroups.length === 0 && (
+                          <div className="warning-message">
+                            ⚠️ Debes seleccionar al menos un grupo para el simulacro
                           </div>
-                        ))}
+                        )}
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div>
+                      <h3>Asignar a Estudiantes</h3>
+                      
+                      <div className="assign-options">
+                        <div className="students-section">
+                          <h4>Estudiantes Individuales</h4>
+                          <div className="students-list">
+                            {availableStudents.map(student => (
+                              <label key={student.id} className="student-item">
+                                <input
+                                  type="checkbox"
+                                  checked={quizData.assignedTo.includes(student.id)}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      handleQuizChange('assignedTo', [...quizData.assignedTo, student.id]);
+                                    } else {
+                                      handleQuizChange('assignedTo', quizData.assignedTo.filter(id => id !== student.id));
+                                    }
+                                  }}
+                                />
+                                <div className="student-info">
+                                  <span className="student-name">{student.name}</span>
+                                  <span className="student-email">{student.email}</span>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="groups-section">
+                          <h4>Grupos</h4>
+                          <div className="groups-list">
+                            {availableGroups.map(group => (
+                              <div key={group.id} className="group-item">
+                                <label>
+                                  <input type="checkbox" />
+                                  <div className="group-info">
+                                    <span className="group-name">{group.name}</span>
+                                    <span className="group-students">{group.students} estudiantes</span>
+                                  </div>
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -1225,6 +1355,63 @@ const StyledWrapper = styled.div`
     color: #64748b;
   }
 
+  /* Simulacro Assignment Styles */
+  .assignment-note {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .assignment-note strong {
+    color: #92400e;
+  }
+
+  .warning-message {
+    background: #fef2f2;
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    color: #dc2626;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* Assigned Groups Info Styles */
+  .assigned-groups-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .assigned-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f0f9ff;
+    border: 1px solid #0ea5e9;
+    border-radius: 8px;
+  }
+
+  .assigned-group-item .group-name {
+    font-weight: 500;
+    color: #0c4a6e;
+  }
+
+  .assigned-group-item .group-students {
+    font-size: 0.9rem;
+    color: #0369a1;
+  }
+
+  .groups-note {
+    color: #64748b;
+    font-style: italic;
+  }
+
   /* Independent Access Styles */
   .independent-access {
     padding: 2rem;
@@ -1277,6 +1464,86 @@ const StyledWrapper = styled.div`
     margin: 0;
     color: #92400e;
     font-size: 0.9rem;
+  }
+
+  .simulacro-options {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .access-option {
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fafafa;
+    transition: all 0.3s ease;
+  }
+
+  .access-option:hover {
+    border-color: #2196f3;
+    background: #f0f8ff;
+  }
+
+  .access-option h4 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1.1rem;
+  }
+
+  .access-option p {
+    margin: 0 0 1rem 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .assign-btn {
+    background: #2196f3;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+  }
+
+  .assign-btn:hover {
+    background: #1976d2;
+  }
+
+  .assignment-summary {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #e8f5e8;
+    border: 1px solid #4caf50;
+    border-radius: 8px;
+  }
+
+  .assignment-summary h4 {
+    margin: 0 0 0.5rem 0;
+    color: #2e7d32;
+  }
+
+  .assignment-summary p {
+    margin: 0.25rem 0;
+    color: #2e7d32;
+    font-size: 0.9rem;
+  }
+
+  .simulacro-info {
+    padding: 1rem;
+    background: #f0f8ff;
+    border: 2px solid #2196f3;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .simulacro-info p {
+    margin: 0 0 0.5rem 0;
+    color: #1976d2;
+    font-size: 1.1rem;
   }
 
   .independent-note {

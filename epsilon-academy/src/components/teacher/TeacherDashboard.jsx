@@ -107,11 +107,6 @@ const TeacherDashboard = () => {
     console.log('Creando nuevo simulacro');
   };
 
-  const handleCreateGeneralEvaluation = () => {
-    // Esta función puede abrir un modal para seleccionar el tipo de evaluación
-    console.log('Crear evaluación general - abrir selector de tipo');
-  };
-
   // Componente para el header de sección con filtros
   const SectionHeader = ({ title, description, onCreateNew, createButtonText, additionalButtons = [], showFilters = false, viewMode, onViewModeChange, filters, onFilterChange, filterOptions = {} }) => (
     <div className="section-header">
@@ -398,10 +393,6 @@ const TeacherDashboard = () => {
                       Crear Nuevo Curso
                     </button>
                     <button className="action-btn secondary">
-                      <Award size={20} />
-                      Nueva Evaluación
-                    </button>
-                    <button className="action-btn secondary">
                       <MessageSquare size={20} />
                       Enviar Mensaje
                     </button>
@@ -568,8 +559,6 @@ const TeacherDashboard = () => {
                 <SectionHeader
                   title="Gestión de Evaluaciones"
                   description="Administra exámenes, tareas y seguimiento académico"
-                  onCreateNew={handleCreateGeneralEvaluation}
-                  createButtonText="Nueva Evaluación"
                   additionalButtons={[
                     {
                       text: "Crear Quiz",

@@ -6,6 +6,7 @@ import ThemeToggle from '../common/ThemeToggle';
 import OfertaAcademica from './OfertaAcademica';
 import MisCursos from './MisCursos';
 import Simulacros from './Simulacros';
+import StudentProfile from './StudentProfile';
 
 const StudentDashboard = () => {
   const [currentPage, setCurrentPage] = useState('dashboard');
@@ -23,6 +24,8 @@ const StudentDashboard = () => {
         return <MisCursos />;
       case 'simulacros':
         return <Simulacros />;
+      case 'perfil':
+        return <StudentProfile />;
       default:
         return renderDashboard();
     }
@@ -192,6 +195,7 @@ const StudentDashboard = () => {
                 {currentPage === 'oferta-academica' && 'Oferta Académica'}
                 {currentPage === 'mis-cursos' && 'Mis Cursos'}
                 {currentPage === 'simulacros' && 'Simulacros'}
+                {currentPage === 'perfil' && 'Mi Perfil'}
               </h1>
             )}
           </div>
@@ -201,12 +205,20 @@ const StudentDashboard = () => {
             <div className="notification-icon">
               <Bell size={20} color={isDarkMode ? "#cbd5e1" : "#2c3e50"} />
             </div>
-            <div className="user-info">
+            <div 
+              className="user-info"
+              onClick={() => navegarA('perfil')}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="user-name">Demo Student</div>
               <div className="user-email">demo@epsilonacademy.com</div>
-              <div className="edit-profile">Editar perfil</div>
+              <div className="edit-profile">Ver mi perfil</div>
             </div>
-            <div className="profile-icon">
+            <div 
+              className="profile-icon"
+              onClick={() => navegarA('perfil')}
+              style={{ cursor: 'pointer' }}
+            >
               <User size={20} color={isDarkMode ? "#cbd5e1" : "#2c3e50"} />
             </div>
           </div>
