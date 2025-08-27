@@ -8,7 +8,7 @@ import TeacherDashboard from '../components/teacher/TeacherDashboard';
 
 const AppRoutes = () => {
   return (
-    <Router>
+    <Router basename="/Epsilon-React">
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
